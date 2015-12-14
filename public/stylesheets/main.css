@@ -1,0 +1,712 @@
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTThin.ttf");
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTThin.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansThin.otf") format("opentype");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTExtraLight.ttf");
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTExtraLight.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansExtraLight.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTRegular.ttf");
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTRegular.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansRegular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTBold.ttf");
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTBold.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansBold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTHeavy.ttf");
+  src: url("/./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTHeavy.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansHeavy.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTThinOblique.ttf");
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTThinOblique.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansThinOblique.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTExtraLightOblique.ttf");
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTExtraLightOblique.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansExtraLightOblique.otf") format("opentype");
+  font-weight: thin;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTRegularOblique.ttf");
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTRegularOblique.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansRegularOblique.otf") format("opentype");
+  font-weight: italic;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTBoldOblique.ttf");
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTBoldOblique.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansBoldOblique.otf") format("opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'CiscoSans';
+  src: url("./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTHeavyOblique.ttf");
+  src: url("/./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTHeavyOblique.ttf") format("truetype"), url("./../../Cisco_Fonts/CiscoSans OTF/CiscoSansHeavyOblique.otf") format("opentype");
+  font-weight: 900;
+  font-style: italic;
+}
+/* line 10, ../sass/main.scss */
+* {
+  outline: none;
+}
+
+/* line 13, ../sass/main.scss */
+h1, h2, h3 {
+  font-weight: 200;
+  margin: 10px 0;
+}
+
+/* line 18, ../sass/main.scss */
+h4, h5, h6 {
+  font-weight: 300;
+}
+
+/* line 22, ../sass/main.scss */
+button {
+  background-color: #ee3923;
+  border: none;
+  color: white;
+  padding: 10px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* line 31, ../sass/main.scss */
+input {
+  border: 1px solid #ee3923;
+  padding: 5px 10px;
+  border-radius: 2px;
+  font-size: 1.2rem;
+}
+/* line 36, ../sass/main.scss */
+input:focus {
+  outline: none;
+}
+
+/* line 41, ../sass/main.scss */
+html, body {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  font-family: CiscoSans;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #ee3923;
+  min-height: 640px;
+}
+
+/* line 53, ../sass/main.scss */
+a {
+  text-decoration: none;
+}
+
+/* line 57, ../sass/main.scss */
+.button {
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: whitesmoke;
+  border-radius: 1px solid black;
+  cursor: pointer;
+}
+
+/* line 65, ../sass/main.scss */
+nav {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  position: relative;
+  width: 300px;
+  height: 100%;
+  background: white;
+}
+/* line 73, ../sass/main.scss */
+nav img {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+}
+/* line 78, ../sass/main.scss */
+nav img.ccds-logo {
+  padding: 15px 60px;
+}
+/* line 83, ../sass/main.scss */
+nav img.logo-text {
+  padding-left: 0;
+}
+/* line 86, ../sass/main.scss */
+nav img.nav-bar-cam {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0 40px;
+}
+
+/* line 105, ../sass/main.scss */
+.nav-home {
+  cursor: pointer;
+}
+
+/* line 109, ../sass/main.scss */
+.nav-option {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -moz-transition: color 0.2s, background-color 0.2s;
+  -o-transition: color 0.2s, background-color 0.2s;
+  -webkit-transition: color 0.2s, background-color 0.2s;
+  transition: color 0.2s, background-color 0.2s;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  padding: 15px 0;
+  padding-left: 30px;
+  color: #ee3923;
+}
+/* line 122, ../sass/main.scss */
+.nav-option i {
+  font-size: 1.2rem;
+  margin: 0 30px;
+}
+/* line 127, ../sass/main.scss */
+.nav-option:hover, .nav-option.selected {
+  color: white;
+  background-color: #ee3923;
+}
+
+/* line 143, ../sass/main.scss */
+.dashboard.container {
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  width: 100%;
+}
+/* line 146, ../sass/main.scss */
+.dashboard.container section {
+  padding-top: 60px;
+}
+
+/* line 150, ../sass/main.scss */
+.user-info {
+  -webkit-flex: 1 1 0;
+  flex: 1 1 0;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  height: 100%;
+  max-width: 300px;
+  color: white;
+}
+
+/* line 160, ../sass/main.scss */
+.selfie-container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
+  -webkit-justify-content: center;
+  justify-content: center;
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+/* line 171, ../sass/main.scss */
+.selfie-container .icon-contact {
+  color: #ee3923;
+  font-size: 175px;
+}
+/* line 175, ../sass/main.scss */
+.selfie-container .icon-upload {
+  color: white;
+  font-size: 100px;
+}
+
+/* line 180, ../sass/main.scss */
+.preview-selfie {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+/* line 186, ../sass/main.scss */
+.confirm-button-wrapper {
+  -moz-transition: height 0.2s;
+  -o-transition: height 0.2s;
+  -webkit-transition: height 0.2s;
+  transition: height 0.2s;
+  width: 200px;
+  height: 0;
+  overflow: hidden;
+}
+/* line 191, ../sass/main.scss */
+.confirm-button-wrapper button {
+  background-color: #43a943;
+  width: 100%;
+}
+/* line 195, ../sass/main.scss */
+.confirm-button-wrapper.reveal-upload {
+  height: 38px;
+}
+
+/* line 199, ../sass/main.scss */
+.upload-overlay {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -moz-transition: opacity 0.2s;
+  -o-transition: opacity 0.2s;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  text-transform: uppercase;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+/* line 213, ../sass/main.scss */
+.upload-overlay:hover {
+  opacity: 1;
+}
+
+/* line 218, ../sass/main.scss */
+.video-info {
+  -webkit-flex: 1 1 0;
+  flex: 1 1 0;
+  padding: 0 15px;
+}
+/* line 221, ../sass/main.scss */
+.video-info video {
+  width: 100%;
+}
+
+/* line 226, ../sass/main.scss */
+.video-submission {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-align-items: center;
+  align-items: center;
+  background-color: white;
+  padding: 15px;
+}
+/* line 234, ../sass/main.scss */
+.video-submission button {
+  margin-top: 20px;
+}
+/* line 236, ../sass/main.scss */
+.video-submission button.inactive {
+  pointer-events: none;
+  background-color: grey;
+}
+
+/* line 251, ../sass/main.scss */
+.guidelines.container {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+}
+/* line 255, ../sass/main.scss */
+.guidelines.container h1 {
+  padding: 60px 0;
+}
+/* line 258, ../sass/main.scss */
+.guidelines.container h3 {
+  font-weight: 400;
+}
+/* line 261, ../sass/main.scss */
+.guidelines.container section {
+  padding: 60px 30px;
+}
+/* line 264, ../sass/main.scss */
+.guidelines.container article {
+  padding: 0 30px;
+}
+/* line 267, ../sass/main.scss */
+.guidelines.container p {
+  padding: 0 12px;
+  font-weight: 300;
+}
+
+/* line 273, ../sass/main.scss */
+.guideline-intro {
+  color: white;
+}
+
+/* line 277, ../sass/main.scss */
+.meet-osmo {
+  background-color: white;
+}
+/* line 279, ../sass/main.scss */
+.meet-osmo img {
+  width: 100%;
+  cursor: pointer;
+}
+
+/* line 285, ../sass/main.scss */
+.iframe-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  /* 16:9 */
+  padding-top: 25px;
+  height: 0;
+}
+
+/* line 292, ../sass/main.scss */
+.iframe-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* line 306, ../sass/main.scss */
+.login-panel {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.52);
+  height: 100%;
+  z-index: 2;
+}
+
+/* line 320, ../sass/main.scss */
+.panel-container {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  background-color: white;
+  padding: 50px;
+  width: 450px;
+}
+/* line 326, ../sass/main.scss */
+.panel-container .icon-exit {
+  -moz-transition: black 0.2s;
+  -o-transition: black 0.2s;
+  -webkit-transition: black 0.2s;
+  transition: black 0.2s;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.8);
+}
+/* line 335, ../sass/main.scss */
+.panel-container .icon-exit:hover {
+  color: black;
+}
+
+/* line 341, ../sass/main.scss */
+.register-account {
+  color: #ee3923;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+/* line 347, ../sass/main.scss */
+.form-wrapper {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  flex-direction: column;
+  align-items: center;
+}
+/* line 353, ../sass/main.scss */
+.form-wrapper button {
+  margin-top: 30px;
+}
+/* line 356, ../sass/main.scss */
+.form-wrapper input {
+  text-align: center;
+}
+/* line 359, ../sass/main.scss */
+.form-wrapper hr {
+  border: none;
+  width: 119%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin: 20px 0;
+}
+/* line 366, ../sass/main.scss */
+.form-wrapper .icon-left-arrow {
+  -moz-transition: black 0.2s;
+  -o-transition: black 0.2s;
+  -webkit-transition: black 0.2s;
+  transition: black 0.2s;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.8);
+}
+/* line 375, ../sass/main.scss */
+.form-wrapper .icon-left-arrow:hover {
+  color: black;
+}
+
+/* line 381, ../sass/main.scss */
+.registration-wrapper {
+  text-align: center;
+}
+
+/* line 395, ../sass/main.scss */
+.panel-container.register h4 {
+  margin: 0;
+}
+/* line 398, ../sass/main.scss */
+.panel-container.register h3 {
+  margin-top: 0;
+  color: #ee3923;
+}
+
+/* line 403, ../sass/main.scss */
+.show-password-container {
+  font-weight: 300;
+  margin-top: 10px;
+}
+
+/* line 417, ../sass/main.scss */
+.stamp {
+  position: absolute;
+}
+/* line 419, ../sass/main.scss */
+.stamp.vertical {
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  -moz-transform: translate(26%);
+  -ms-transform: translate(26%);
+  -webkit-transform: translate(26%);
+  transform: translate(26%);
+  left: 70%;
+  height: 73vh;
+  width: 26vh;
+  bottom: 0;
+}
+/* line 429, ../sass/main.scss */
+.stamp.arm {
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  -moz-transform: translate(26%);
+  -ms-transform: translate(26%);
+  -webkit-transform: translate(26%);
+  transform: translate(26%);
+  left: 70%;
+  height: 14vh;
+  width: 37vh;
+  bottom: 0;
+}
+/* line 439, ../sass/main.scss */
+.stamp.video {
+  -moz-transform: translate(-82%);
+  -ms-transform: translate(-82%);
+  -webkit-transform: translate(-82%);
+  transform: translate(-82%);
+  left: 70%;
+  width: 38vh;
+  height: 22vh;
+  bottom: 26vh;
+}
+
+/* line 451, ../sass/main.scss */
+.focus-item {
+  position: absolute;
+  background: white;
+  width: 80%;
+  height: 73%;
+  top: 15%;
+  left: 15%;
+  overflow: hidden;
+}
+/* line 460, ../sass/main.scss */
+.focus-item img {
+  object-fit: cover;
+  width: 100%;
+}
+/* line 464, ../sass/main.scss */
+.focus-item video {
+  height: 100%;
+}
+
+/* line 469, ../sass/main.scss */
+#osmo-image {
+  -moz-transform: translate(-35%, 10%);
+  -ms-transform: translate(-35%, 10%);
+  -webkit-transform: translate(-35%, 10%);
+  transform: translate(-35%, 10%);
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  bottom: 0;
+  height: 80vh;
+  left: 70%;
+}
+
+/* line 481, ../sass/main.scss */
+.unit-reference {
+  height: 1px;
+  visibility: hidden;
+  position: absolute;
+  width: 10px;
+}
+
+/* line 488, ../sass/main.scss */
+.video-wrappers {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+/* line 491, ../sass/main.scss */
+.video-wrappers.small {
+  width: 200px;
+  height: 100px;
+}
+/* line 496, ../sass/main.scss */
+.video-wrappers.extra-wide {
+  width: 320px;
+  height: 180px;
+}
+/* line 502, ../sass/main.scss */
+.video-wrappers.wide {
+  width: 160px;
+  height: 120px;
+}
+/* line 508, ../sass/main.scss */
+.video-wrappers .image-loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 2;
+}
+
+/* line 519, ../sass/main.scss */
+.container {
+  display: inline-block;
+  position: relative;
+  flex: 1 1 0;
+}
+/* line 523, ../sass/main.scss */
+.container.upload-method {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+/* line 526, ../sass/main.scss */
+.container.form-wrapper {
+  padding: 30px;
+  background-color: white;
+}
+/* line 530, ../sass/main.scss */
+.container.row {
+  display: -webkit-flex;
+  display: flex;
+}
+/* line 533, ../sass/main.scss */
+.container.mosaic {
+  -webkit-flex: 1 1 0;
+  flex: 1 1 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+  height: 100% !important;
+}
+
+/* line 542, ../sass/main.scss */
+.row .upload-method {
+  -webkit-flex: 1 1 0;
+  flex: 1 1 0;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+/* line 547, ../sass/main.scss */
+.center-children, .focus-item {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+/* line 553, ../sass/main.scss */
+.video-preview {
+  height: 100px;
+}

@@ -1,0 +1,6 @@
+{
+	"hostName" : "localhost",
+	"port" 			: "8080",
+	"database"	: "OsmoApp",
+	"live"			: false
+}

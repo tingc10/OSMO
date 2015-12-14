@@ -1,0 +1,556 @@
+@import "compass/css3";
+@import "./../Cisco_Fonts/CiscoSans";
+
+$orange: #ee3923;
+$lightGreen: #d4ecd4;
+$lightOrange: #fdd5d3;
+$lightYellow: #fdebcd;
+$defaultUnitSize: 10px;
+$green: #43a943;
+* {
+	outline: none;
+}
+h1, h2, h3 {
+	font-weight: 200;
+	margin: 10px 0;
+}
+
+h4, h5, h6 {
+	font-weight: 300;
+}
+
+button {
+	background-color: $orange;
+  border: none;
+  color: white;
+  padding: 10px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+input {
+	border: 1px solid $orange;
+  padding: 5px 10px;
+  border-radius: 2px;
+  font-size: 1.2rem;
+  &:focus {
+  	outline: none;
+  }
+}
+
+html, body {
+	@include display-flex;
+	@include flex-direction(row);
+	font-family: CiscoSans;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	background-color: $orange;
+	min-height: 640px;
+
+}
+
+a {
+	text-decoration: none;
+}
+
+.button {
+	display: inline-block;
+	padding: 10px 18px;
+	background-color: whitesmoke;
+	border-radius: 1px solid black;
+	cursor: pointer;
+}
+
+nav {
+	@include display-flex;
+  @include flex-direction(column);
+  @include align-items(center);
+  position: relative;
+  width: 300px;
+  height: 100%;
+  background: white;
+  img {
+	  @include box-sizing(border-box);
+	  position: relative;
+  	width: 100%;
+	  
+  	&.ccds-logo{
+		  padding: 15px 60px;
+
+  	}
+  	
+  	&.logo-text {
+  		padding-left: 0;
+  	}
+  	&.nav-bar-cam {
+		  position: absolute;
+		  bottom: 0;
+		  left: 0;
+		  padding: 0 40px;
+  	}
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+.nav-home {
+	cursor: pointer;
+}
+
+.nav-option {
+	@include box-sizing(border-box);
+  @include display-flex;
+  @include align-items(center);
+	@include transition(0.2s color, 0.2s background-color);
+	text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  padding: 15px 0;
+  padding-left: 30px;
+
+  color: $orange;
+	i {
+		font-size: 1.2rem;
+		margin: 0 30px;
+	}  
+
+  &:hover, &.selected {
+  	color: white;
+  	background-color: $orange;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+.dashboard.container {
+	@include align-items(flex-start);
+	width: 100%;
+	section {
+		padding-top: 60px;
+	}
+}
+.user-info {
+	@include flex(1 1 0);
+  
+  @include display-flex;
+  @include flex-direction(column);
+  @include align-items(center);
+	height: 100%;
+  max-width: 300px;
+  color: white;
+}
+.selfie-container {
+  @include display-flex;
+  @include align-items(flex-end);
+  @include justify-content(center);
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  .icon-contact {
+  	color: $orange;
+  	font-size: 175px;
+  }
+  .icon-upload {
+  	color: white;
+  	font-size: 100px;
+  }
+}
+.preview-selfie {
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	background-position: center;
+}
+.confirm-button-wrapper {
+	@include transition(0.2s height);
+	width: 200px;
+	height: 0;
+	overflow: hidden;
+	button {
+		background-color: $green;
+		width: 100%;
+	}
+	&.reveal-upload {
+		height: 38px;
+	}
+}
+.upload-overlay {
+	@include display-flex;
+	@include align-items(center);
+	@include justify-content(center);
+	@include transition(0.2s opacity);
+	opacity: 0;
+	cursor: pointer;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	text-transform: uppercase;
+	background-color: rgba(0, 0, 0, 0.8);
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.video-info {
+	@include flex(1 1 0);
+	padding: 0 15px;
+	video {
+		width: 100%;
+	}
+}
+
+.video-submission {
+	@include display-flex;
+  @include flex-direction(column);
+  @include box-sizing(border-box);
+  @include align-items(center);
+  background-color: white;
+  
+  padding: 15px;
+  button {
+  	margin-top: 20px;
+  	&.inactive {
+  		pointer-events: none;
+  		background-color: grey;
+  	}
+  }
+}
+
+
+
+
+
+
+
+
+
+.guidelines.container {
+	@include box-sizing(border-box);
+	height: 100%;
+	overflow: auto;
+	h1 {
+		padding: 60px 0;
+	}
+	h3 {
+		font-weight: 400;
+	}
+	section {
+		padding: 60px 30px;
+	}
+	article {
+		padding: 0 30px;
+	}
+	p {
+		padding: 0 12px;
+		font-weight: 300;
+	}
+}
+
+.guideline-intro {
+	color: white;
+}
+
+.meet-osmo {
+	background-color: white;
+	img {
+		width: 100%;
+		cursor: pointer;
+	}
+}
+
+.iframe-wrapper {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+	height: 0;
+}
+
+.iframe-wrapper iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+
+
+
+
+
+
+.login-panel {
+	@include display-flex;
+  @include justify-content(center);
+  @include align-items(center);
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.52);
+  height: 100%;
+  z-index: 2;
+}
+
+.panel-container {
+	@include box-sizing(border-box);
+	position: relative;
+	background-color: white;
+  padding: 50px;
+  width: 450px;
+  .icon-exit {
+	  @include transition(0.2s black);
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  padding: 10px;
+	  font-size: 1.5rem;
+	  cursor: pointer;
+	  color: rgba(0, 0, 0, 0.8);
+	  &:hover {
+	  	color: black;
+	  }
+  }
+}
+
+.register-account {
+	color: $orange;
+	cursor: pointer;
+	font-weight: 400;
+}
+
+.form-wrapper {
+	@include display-flex;
+  @include flex-direction(column);
+  @include align-items(center);
+  flex-direction: column;
+  align-items: center;
+  button {
+  	margin-top: 30px;
+  }
+  input {
+  	text-align: center;
+  }
+  hr {
+  	border: none;
+	  width: 119%;
+	  height: 1px;
+	  background-color: rgba(0,0,0,0.2);
+	  margin: 20px 0;
+  }
+  .icon-left-arrow {
+  	@include transition(0.2s black);
+	  position: absolute;
+	  top: 0;
+	  left: 0;
+	  padding: 10px;
+	  font-size: 1.5rem;
+	  cursor: pointer;
+	  color: rgba(0, 0, 0, 0.8);
+	  &:hover {
+	  	color: black;
+	  }
+  }
+}
+
+.registration-wrapper {
+	text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+.panel-container.register {
+	h4 {
+		margin: 0;
+	}
+	h3 {
+		margin-top: 0;
+		color: $orange;
+	}
+}
+.show-password-container {
+	font-weight: 300;
+	margin-top: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+.stamp {
+	position: absolute;
+	&.vertical {
+  	@include user-select(none);
+  	pointer-events: none;
+
+	  @include transform(translate(26%));
+		left: 70%;
+    height: 73vh;
+  	width: 26vh;
+	  bottom: 0;
+	}
+	&.arm {
+		@include user-select(none);
+		pointer-events: none;
+
+		@include transform(translate(26%));
+	  left: 70%;
+	  height: 14vh;
+  	width: 37vh;
+	  bottom: 0;
+	}
+	&.video {
+		@include transform(translate(-82%));
+	  left: 70%;
+	  width: 38vh;
+	  height: 22vh;
+	  bottom: 26vh;
+	}
+
+}
+
+
+
+.focus-item {
+	@extend .center-children;
+	position: absolute;
+  background: white;
+  width: 80%;
+  height: 73%;
+  top: 15%;
+  left: 15%;
+  overflow: hidden;
+  img {
+  	object-fit: cover;
+  	width: 100%;
+  }
+  video {
+  	height: 100%;
+  }
+}
+
+#osmo-image {
+	@include transform(translate(-35%, 10%));
+  @include user-select(none);
+  pointer-events: none;
+
+
+	position: absolute;
+  bottom: 0;
+  height: 80vh;
+  left: 70%;
+}
+
+.unit-reference {
+	height: 1px;
+	visibility: hidden;
+	position: absolute;
+	width: $defaultUnitSize;
+}
+
+.video-wrappers {
+	background-color: rgba(0, 0, 0, 0.8);
+  // float: left;
+  &.small {
+  	width: $defaultUnitSize*20;
+  	height: $defaultUnitSize*10;
+  	// background-color: $lightYellow;
+  }
+  &.extra-wide {
+  	width: $defaultUnitSize*32;
+  	height: $defaultUnitSize*18;
+  	// background-color: $lightGreen;
+
+  }
+  &.wide {
+  	// background-color: $lightOrange;
+
+  	width: $defaultUnitSize*16;
+  	height: $defaultUnitSize*12;
+  }
+  .image-loader {
+  	position: absolute;
+  	width: 100%;
+  	height: 100%;
+  	background-size: cover;
+  	background-position: center;
+  	z-index: 2;
+  }
+}
+
+
+.container {
+	display: inline-block;
+	position: relative;
+	flex: 1 1 0;
+	&.upload-method {
+		border: 1px solid rgba(0, 0, 0, 0.2);
+	}
+	&.form-wrapper {
+		padding: 30px;
+		background-color: white;
+	}
+	&.row {
+		@include display-flex;
+	}
+	&.mosaic {
+		@include flex(1 1 0);
+		@include box-sizing(border-box);
+		overflow: hidden;
+		height: 100% !important;
+		// padding: 2px;
+	}
+}
+
+.row .upload-method {
+	@include flex(1 1 0);
+	@include flex-direction(column);
+}
+
+.center-children {
+	@include display-flex;
+	@include justify-content(center);
+	@include align-items(center);
+}
+
+.video-preview {
+	height: 100px;
+}
+

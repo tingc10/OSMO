@@ -1,0 +1,93 @@
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTThin.ttf');
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTThin.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansThin.otf') format('opentype');
+	font-weight: 100;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTExtraLight.ttf');
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTExtraLight.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansExtraLight.otf') format('opentype');
+	font-weight: 300;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTRegular.ttf');
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTRegular.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansRegular.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTBold.ttf');
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTBold.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansBold.otf') format('opentype');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTHeavy.ttf');
+	src:url('/./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTHeavy.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansHeavy.otf') format('opentype');
+	font-weight: 900;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTThinOblique.ttf');
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTThinOblique.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansThinOblique.otf') format('opentype');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTExtraLightOblique.ttf');
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTExtraLightOblique.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansExtraLightOblique.otf') format('opentype');
+	font-weight: thin;
+	font-style: italic;
+}
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTRegularOblique.ttf');
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTRegularOblique.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansRegularOblique.otf') format('opentype');
+	font-weight: italic;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTBoldOblique.ttf');
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTBoldOblique.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansBoldOblique.otf') format('opentype');
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'CiscoSans';
+	src: url('./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTHeavyOblique.ttf');
+	src:url('/./../../Cisco_Fonts/CiscoSans TTF/CiscoSansTTHeavyOblique.ttf') format('truetype'),
+	url('./../../Cisco_Fonts/CiscoSans OTF/CiscoSansHeavyOblique.otf') format('opentype');
+	font-weight: 900;
+	font-style: italic;
+}
+
+
+
+// body { 
+// 	font: normal normal normal 1em/1em CiscoSans,'times new roman',serif;
+// }

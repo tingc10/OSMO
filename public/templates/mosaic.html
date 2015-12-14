@@ -1,0 +1,15 @@
+<!-- <img class="ccds-logo stamp" src="./img/ccds-logo.png"></img> -->
+<img id="osmo-image" src="./img/dji-osmo.png"></img>
+
+<div class="stamp vertical" stamp></div>
+<div class="stamp arm" stamp></div>
+<div class="stamp video" stamp>
+	<div class="focus-item">
+		<img src="//i.giphy.com/SqP6xkizrTNO8.gif" ng-hide="currentVideo"></img>
+		<video controls ng-if="currentVideo">
+			<source ng-src="{{currentVideo | trustUrl}}" type="video/mp4">
+		</video>
+	</div>
+</div>
+<div class="video-wrappers {{randomSize}}" ng-repeat="image in images track by $index" packery-item></div>
+<div class="unit-reference"></div>

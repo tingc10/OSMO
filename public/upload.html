@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<title>Untitled</title>
+<link href="./stylesheets/main.css" rel="stylesheet">
+<script src="./node_modules/angular/angular.min.js"></script>
+<script src="./node_modules/gsap/src/minified/TweenMax.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="./node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+<script src="./node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
+<!-- PERSONAL JS -->
+<script type="text/javascript" src="./js/directives.js"></script>
+<script type="text/javascript" src="./js/controllers.js"></script>
+<script type="text/javascript" src="./js/app.js"></script>
+</head>
+<body class="center-children" ng-app="OsmoApp" ng-controller="UploadController">
+	
+	<form method="POST" action="{{uploadLink}}" enctype='multipart/form-data'>
+		<input type="file" name="file_data" model="file">
+		<button type="submit" value="submit" ng-click="submit()">SUBMIT</button>
+	</form>
+	
+</body>
+</html>

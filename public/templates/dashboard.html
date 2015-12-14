@@ -1,0 +1,32 @@
+<section class="user-info">
+	<div class="selfie-container" ng-style="{'background-image': 'url('+currentUser.selfieLocation+')'}">
+		<i class="icon-contact" ng-if="!currentUser.selfieLocation && !selfiePreview"></i>
+		<div class="preview-selfie" ngf-background="selfiePreview"></div>
+		<div class="upload-overlay">
+			<div ngf-select ngf-change="selfieSelected()" ng-model="selfiePreview">
+				<i class="icon-upload"></i>
+			</div>
+		</div>
+	</div>
+	<div class="confirm-button-wrapper" ng-class="{'reveal-upload': showSubmission}">
+		<button type="submit" class="submit" type="button" ng-click="uploadSelfie()">Upload Selfie</button>
+	</div>
+ 	<div class="name">
+		<h2>{{currentUser.name}}</h2>
+	</div>
+</section>
+<section class="video-info">
+	<div class="handoff-container" ng-if="requireHandoff">
+		<h3>Now that you have submit your video, who do you want to hand off OSMO?</h3>
+		<div class="user-selection" ng-repeat="user in handoffCandidates track by $index" ng-click="selectedCandidate = user.userId">{{user.userId}}</div>
+		<button ng-click="confirmNextUser()">Confirm Selection</button>
+	</div>
+	<video ng-if="userVideoUrl" controls>
+		<source ng-src="{{userVideoUrl | trustUrl}}" type="video/mp4">
+	</video>
+	<form class="video-submission" method="POST" action="{{uploadLink}}" enctype='multipart/form-data' upload ng-if="showVideoSubmission">
+		<h3>Submit your video!</h3>
+		<input type="file" name="file_data" onchange="angular.element(this).scope().checkFile(this)">
+		<button ng-class="{inactive: !videoFileSelected}" type="submit" value="submit" ng-click="submit()">SUBMIT</button>
+	</form>
+</section>

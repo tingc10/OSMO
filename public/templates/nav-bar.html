@@ -1,0 +1,18 @@
+<div class="nav-home" ng-click="navigate('main')">
+	<img class="ccds-logo" src="./img/ccds-logo.png"></img>
+	<!-- <img class="ccds-cloud" src="./img/ccds-cloud.png"></img>
+	<img class="logo-text" src="./img/ccds-words.png"></img> -->
+</div>
+<div class="nav-option" ng-click="toggleLogin(true)" ng-if="!loggedIn">
+	<i class="icon-sign-in"></i> Login
+</div>
+<div class="nav-option" ng-class="{selected:currentPage == 'dashboard'}" ng-click="navigate('dashboard')" ng-if="loggedIn">
+	<i class="icon-contact"></i> {{currentUser.name}}
+</div>
+<div class="nav-option" ng-class="{selected:currentPage == 'guidelines'}" ng-click="navigate('guidelines')">
+	<i class="icon-info-outline"></i> Guidelines
+</div>
+<div class="nav-option" ng-if="loggedIn" ng-click="logout()">
+	<i class="icon-sign-out"></i> Logout
+</div>
+<img class="nav-bar-cam" src="./img/nav-bar-camera.png"></img>
