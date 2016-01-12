@@ -26,7 +26,7 @@
 			<label for="password">
 				<h2>Password</h2>
 			</label>
-			<input name="password" type="{{showPassword? 'text':'password'}}" placeholder="5UP3R 53CR3T" ng-model="password" />
+			<input name="password" type="{{showPassword? 'text':'password'}}" placeholder="5UP3R 53CR3T" ng-model="password" submit-with-enter="createAccount" />
 			<div class="show-password-container">
 				<input type="checkbox" ng-model="showPassword" value="false" name="reveal" />
 				<label for="reveal">

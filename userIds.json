@@ -1,63 +1,241 @@
 {	
 	"users" :	
 	[				
-		"olwenz",
-		"stenoble",
-		"ahmarsha",
-		"amnijjar",
-		"andrhend",
-		"angrober",
-		"bcantell",
-		"chengwu",
-		"chrwang3",
-		"clavende",
-		"danjosep",
-		"danquinn",
-		"ddaood",
-		"edmcmull",
-		"fafarajm",
-		"feihu",
-		"fellee",
-		"hjuturu",
-		"hoyelee",
-		"jacksh",
-		"jeffrjo2",
-		"joorlee",
-		"kbsmith",
-		"kevicheo",
-		"kmcgar",
-		"lakim",
-		"law",
-		"linwa3",
-		"linzhan3",
-		"luwang2",
-		"marparke",
-		"miskim",
-		"patcurra",
-		"petnewto",
-		"phpi",
-		"pshetye",
-		"ravira",
-		"samuande",
-		"ssvagrov",
-		"stewcurr",
-		"sumckenz",
-		"svanneyg",
-		"thduane",
-		"tianjili",
-		"tifok",
-		"tingche",
-		"tmccollu",
-		"viviho",
-		"wejiang2",
-		"wifan",
-		"xinrlu",
-		"xinycai",
-		"xinywu",
-		"yiqwang",
-		"yiwshao",
-		"yjinhong",
-		"yulhuang",
-		"yyan2"
+		{
+			"userId":"olwenz",
+			"location": "SJ"
+		},
+		{
+			"userId":"stenoble",
+			"location": "SJ"
+		},
+		{
+			"userId":"ahmarsha",
+			"location": "TX"
+		},
+		{
+			"userId":"amnijjar",
+			"location": "SJ"
+		},
+		{
+			"userId":"andrhend",
+			"location": "GALWAY"
+		},
+		{
+			"userId":"angrober",
+			"location": "SJ"
+		},
+		{
+			"userId":"bcantell",
+			"location": "SJ"
+		},
+		{
+			"userId":"chengwu",
+			"location": "SJ"
+		},
+		{
+			"userId":"chrwang3",
+			"location": "SF"
+		},
+		{
+			"userId":"clavende",
+			"location": "GALWAY"
+		},
+		{
+			"userId":"danjosep",
+			"location": "SJ"
+		},
+		{
+			"userId":"danquinn",
+			"location": "GALWAY"
+		},
+		{
+			"userId":"ddaood",
+			"location": "SJ"
+		},
+		{
+			"userId":"edmcmull",
+			"location": "GALWAY"
+		},
+		{
+			"userId":"fafarajm",
+			"location": "SF"
+		},
+		{
+			"userId":"feihu",
+			"location": "SJ"
+		},
+		{
+			"userId":"fellee",
+			"location": "SJ"
+		},
+		{
+			"userId":"hjuturu",
+			"location": "SJ"
+		},
+		{
+			"userId":"hoyelee",
+			"location": "SJ"
+		},
+		{
+			"userId":"jacksh",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"jeffrjo2",
+			"location": "SJ"
+		},
+		{
+			"userId":"joorlee",
+			"location": "KOREA"
+		},
+		{
+			"userId":"kbsmith",
+			"location": "TX"
+		},
+		{
+			"userId":"kevicheo",
+			"location": "SJ"
+		},
+		{
+			"userId":"kmcgar",
+			"location": "SEATTLE"
+		},
+		{
+			"userId":"lakim",
+			"location": "SF"
+		},
+		{
+			"userId":"law",
+			"location": "SF"
+		},
+		{
+			"userId":"linwa3",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"linzhan3",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"luwang2",
+			"location": "SJ"
+		},
+		{
+			"userId":"marparke",
+			"location": "SD"
+		},
+		{
+			"userId":"miskim",
+			"location": "SJ"
+		},
+		{
+			"userId":"patcurra",
+			"location": "SJ"
+		},
+		{
+			"userId":"petnewto",
+			"location": "SJ"
+		},
+		{
+			"userId":"phpi",
+			"location": "SJ"
+		},
+		{
+			"userId":"pshetye",
+			"location": "SJ"
+		},
+		{
+			"userId":"ravira",
+			"location": "SJ"
+		},
+		{
+			"userId":"samuande",
+			"location": "TX"
+		},
+		{
+			"userId":"ssvagrov",
+			"location": "SJ"
+		},
+		{
+			"userId":"stewcurr",
+			"location": "DUBLIN"
+		},
+		{
+			"userId":"sumckenz",
+			"location": "TX"
+		},
+		{
+			"userId":"svanneyg",
+			"location": "OSLO"
+		},
+		{
+			"userId":"thduane",
+			"location": "OREGON"
+		},
+		{
+			"userId":"tianjili",
+			"location": "SJ"
+		},
+		{
+			"userId":"tifok",
+			"location": "SJ"
+		},
+		{
+			"userId":"tingche",
+			"location": "SJ"
+		},
+		{
+			"userId":"tmccollu",
+			"location": "SJ"
+		},
+		{
+			"userId":"viviho",
+			"location": "SJ"
+		},
+		{
+			"userId":"wejiang2",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"wifan",
+			"location": "SF"
+		},
+		{
+			"userId":"xinrlu",
+			"location": "SJ"
+		},
+		{
+			"userId":"xinycai",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"xinywu",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"yiqwang",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"yiwshao",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"yjinhong",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"yulhuang",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"yyan2",
+			"location": "SHANGHAI"
+		},
+		{
+			"userId":"yshiu",
+			"location": "SJ"
+		}
 	]
 }

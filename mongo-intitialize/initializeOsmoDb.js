@@ -1,49 +1,64 @@
 var mongoose = require('mongoose'),
 		serverConfig = require('../server-config.json'),
 		User = require('../models/User');
-		userIds = require('../userIds.json').users;
+		users = require('../userIds.json').users;
+var numProcessing = 0;
 
 mongoose.connect('mongodb://'+ serverConfig.hostName + '/' +serverConfig.database);
 /**
  *	Create user unconfigured user
  *	@param {string} userId to be inserted
  */
-function addEmptyUser(userId){
-	console.log(userId);
+function addEmptyUser(user){
+	var userId = user.userId;
+	var location = user.location;
 	var newUser = new User({
-		userId : userId
+		userId : userId,
+		location : location
 	});
-	// console.log(newUser);
-	// newUser.createVerification(function(err, verification){
-	// 	if(err) console.log(err);
-	// 	// console.log("User's verification is: " + verification);
-	// });
+	numProcessing++;
+
 	
 	newUser.save(function(err){
+		numProcessing--;
+		if(numProcessing == 0) {
+			setInitialUser();
+		}
 		if(err) {
-			console.log(err);
+			console.log("Failed to save " + userId + ":" + err);
 			return;
 		}
-		console.log("User Created!");
+		console.log(userId + " Created!");
+
 	});
 };
 
-for(var i = 0, length = userIds.length; i < length; i++){
-	addEmptyUser(userIds[i]);
-}
-var initializerId = "tingche";
-User.findOne({userId: initializerId}, function(err, user){
-	if(err){
-		console.log("error finding "+ initializerId+"'s account", err);
-	}
-	user.hasOsmo = true;
-	user.timeStart = new Date();
-	user.save(function(err){
+function setInitialUser() {
+	var initializerId = "tingche";
+	User.findOne({userId: initializerId}, function(err, user){
+		
 		if(err){
-			console.log(err);
+			console.log("error finding "+ initializerId + "'s account", err);
+			console.log("Initialization Complete");
+			process.exit();
+			return;
 		}
-		console.log(initializerId+" set as first");
+		user.hasOSMO = true;
+		user.timeStart = new Date();
+		user.save(function(err){
+			if(err){
+				console.log("could not save initial user:" + err);
+				console.log("Initialization Complete");
+				process.exit();
+			}
+			console.log(initializerId+" set as first");
+			console.log("Initialization Complete");
+			process.exit();
+		});
 	});
-});
-console.log('Initialization complete');
+}
+
+for(var i = 0, length = users.length; i < length; i++){
+	addEmptyUser(users[i]);
+}
 

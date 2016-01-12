@@ -1,12 +1,15 @@
 @import "compass/css3";
 @import "./../Cisco_Fonts/CiscoSans";
 
-$orange: #ee3923;
+$redOrange: #ee3923;
 $lightGreen: #d4ecd4;
 $lightOrange: #fdd5d3;
 $lightYellow: #fdebcd;
-$defaultUnitSize: 10px;
+// $defaultUnitSize: 10px;
+$defaultUnitSize: 1vh;
 $green: #43a943;
+$red: #d03d35;
+$orange:#f5a623;
 * {
 	outline: none;
 }
@@ -19,8 +22,15 @@ h4, h5, h6 {
 	font-weight: 300;
 }
 
+input {
+  @include input-placeholder {
+    color: #D8D8D8;
+    font-weight: 200;
+  }
+}
+
 button {
-	background-color: $orange;
+	background-color: $redOrange;
   border: none;
   color: white;
   padding: 10px 30px;
@@ -29,7 +39,7 @@ button {
 }
 
 input {
-	border: 1px solid $orange;
+	border: 1px solid $redOrange;
   padding: 5px 10px;
   border-radius: 2px;
   font-size: 1.2rem;
@@ -45,8 +55,9 @@ html, body {
 	margin: 0;
 	height: 100%;
 	width: 100%;
-	background-color: $orange;
+	background-color: $redOrange;
 	min-height: 640px;
+	min-width: 1125px;
 
 }
 
@@ -104,6 +115,7 @@ nav {
 
 .nav-home {
 	cursor: pointer;
+  margin: 30px 0;
 }
 
 .nav-option {
@@ -118,7 +130,7 @@ nav {
   padding: 15px 0;
   padding-left: 30px;
 
-  color: $orange;
+  color: $redOrange;
 	i {
 		font-size: 1.2rem;
 		margin: 0 30px;
@@ -126,9 +138,14 @@ nav {
 
   &:hover, &.selected {
   	color: white;
-  	background-color: $orange;
+  	background-color: $redOrange;
   }
 }
+
+
+
+
+
 
 
 
@@ -169,7 +186,7 @@ nav {
   position: relative;
   overflow: hidden;
   .icon-contact {
-  	color: $orange;
+  	color: $redOrange;
   	font-size: 175px;
   }
   .icon-upload {
@@ -220,6 +237,12 @@ nav {
 	padding: 0 15px;
 	video {
 		width: 100%;
+		max-height: 700px;
+	}
+	.panel {
+		padding: 20px;
+		background-color: white;
+		margin-bottom: 10px;
 	}
 }
 
@@ -240,6 +263,138 @@ nav {
   }
 }
 
+.personal-upload {
+	@include flex-direction(column);
+	padding: 20px;
+	margin-bottom: 10px;
+	h3 {
+		font-weight: 500;
+	}
+}
+
+.clock-container {
+	@include display-flex;
+  @include justify-content(center);
+  background-color: white;
+  margin-bottom: 10px;
+	h1 {
+		color: $redOrange;
+		width: 100%;
+	  text-align: center;
+	  margin: 0;
+	  padding: 20px;
+	  font-size: 3rem;
+	  font-weight: 500;
+	}
+}
+
+.time-left {
+  @include display-flex;
+  @include flex-direction(column);
+  @include align-items(center);
+  width: 100%;
+  .times-wrapper {
+  	@include display-flex;
+	  @include justify-content(space-around);
+	  width: 100%;
+	  max-width: 750px;
+	  h2 {
+	  	color: $redOrange;
+	  	font-weight: 400;
+	  	font-size: 3rem;
+	  }
+  }
+  .time-container {
+  	text-align: center;
+  }
+}
+.confirm-handoff {
+	width: 100%;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  background-color: $green;
+}
+
+.handoff-container {
+	@include flex-direction(column);
+	.user-selection-container {
+		@include display-flex;
+	  @include flex-direction(column);
+	  @include align-items(center);
+		height: 300px;
+		overflow: auto;
+		width: 100%;
+	}
+
+	.user-selection {
+	  padding: 15px 0;
+	  width: 100%;
+	  text-align: center;
+	  cursor: pointer;
+	  &:hover, &.selected {
+	  	background-color: $green;
+	  	color: white;
+	  }
+	}
+}
+
+.network-response {
+	@include transform(scaleY(0));
+  position: absolute;
+  
+  width: 100%;
+  padding: 10px 0;
+  font-size: 1.5rem;
+  background-color: $green;
+  color: white;
+  .text {
+  	visibility: hidden;
+  }
+  &.error {
+  	background-color: $red;
+  }
+}
+
+.upload-reminder {
+	@include display-flex;
+  @include align-items(center);
+  padding: 0;
+  height: 0;
+  margin-bottom: 10px;
+  background-color: white;
+  visibility: hidden;
+  font-weight: 200;
+  i {
+  	color: $orange;
+  	font-size: 2.5rem;
+  	padding: 0 30px;
+
+  }
+
+	h3 {
+		font-weight: 500;
+	}
+}
+
+.turn-info {
+	padding: 20px;
+  margin-bottom: 10px;
+  background-color: white;
+  text-align: center;
+  font-weight: 500;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -254,22 +409,41 @@ nav {
 	overflow: auto;
 	h1 {
 		padding: 60px 0;
+
+		// align-self: flex-start;
 	}
 	h3 {
 		font-weight: 400;
 	}
 	section {
+		@include display-flex;
+		@include flex-direction(column);
+		@include align-items(center);
 		padding: 60px 30px;
 	}
 	article {
 		padding: 0 30px;
+		max-width: 960px;
+		width: 100%;
 	}
 	p {
 		padding: 0 12px;
 		font-weight: 300;
 	}
-}
+	header h1 {
+	  margin: 0;
+	  text-align: center;
+	  font-weight: 300;
+	  font-size: 3rem;
+	  color: white;
+	  padding: 0;
+	  padding-top: 60px;
 
+	}
+}
+.last-note {
+	margin-top: 60px;
+}
 .guideline-intro {
 	color: white;
 }
@@ -303,6 +477,14 @@ nav {
 
 
 
+
+
+
+
+
+
+
+
 .login-panel {
 	@include display-flex;
   @include justify-content(center);
@@ -315,6 +497,13 @@ nav {
   background-color: rgba(0, 0, 0, 0.52);
   height: 100%;
   z-index: 2;
+}
+
+.forgot-password {
+	font-weight: 300;
+  margin-top: 12px;
+  cursor: pointer;
+  color: $redOrange;
 }
 
 .panel-container {
@@ -339,7 +528,7 @@ nav {
 }
 
 .register-account {
-	color: $orange;
+	color: $redOrange;
 	cursor: pointer;
 	font-weight: 400;
 }
@@ -397,7 +586,7 @@ nav {
 	}
 	h3 {
 		margin-top: 0;
-		color: $orange;
+		color: $redOrange;
 	}
 }
 .show-password-container {
@@ -520,6 +709,7 @@ nav {
 	display: inline-block;
 	position: relative;
 	flex: 1 1 0;
+	overflow: auto;
 	&.upload-method {
 		border: 1px solid rgba(0, 0, 0, 0.2);
 	}
@@ -554,3 +744,37 @@ nav {
 	height: 100px;
 }
 
+
+
+
+
+
+
+
+
+$strokeWidth: 30;
+.loader-overlay {
+	background-color: rgba(0, 0, 0, 0.8);
+	width: 100%;
+	height: 100%;
+	@include display-flex;
+	@include align-items(center);
+	@include justify-content(center);
+	z-index: 10;
+	position: absolute;
+	top: 0;
+	left: 0;
+	visibility: hidden;
+	#loader {
+		width: 200px;
+	}
+	#draw {
+		stroke: #ee3923;
+		stroke-width: $strokeWidth;
+	}
+	#outline {
+		stroke: #ee3923;
+		opacity: 0.1;
+		stroke-width: $strokeWidth;
+	}
+}

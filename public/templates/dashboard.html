@@ -1,3 +1,5 @@
+<div class="network-response center-children" ng-class="{error:networkError}" network-response></div>
+
 <section class="user-info">
 	<div class="selfie-container" ng-style="{'background-image': 'url('+currentUser.selfieLocation+')'}">
 		<i class="icon-contact" ng-if="!currentUser.selfieLocation && !selfiePreview"></i>
@@ -9,21 +11,63 @@
 		</div>
 	</div>
 	<div class="confirm-button-wrapper" ng-class="{'reveal-upload': showSubmission}">
-		<button type="submit" class="submit" type="button" ng-click="uploadSelfie()">Upload Selfie</button>
+		<button type="submit" class="submit" type="button" ng-click="uploadSelfie()">Confirm</button>
 	</div>
  	<div class="name">
 		<h2>{{currentUser.name}}</h2>
 	</div>
 </section>
 <section class="video-info">
-	<div class="handoff-container" ng-if="requireHandoff">
+	
+	<div class="clock-container" ng-show="showCountdown">
+		<h1 ng-show="releaseNinja">Time's Up, Ninja Released!</h1>
+		<div class="time-left">
+			<h3 class="header">TIME LEFT WITH OSMO</h3>
+			<div class="times-wrapper">
+				<div class="time-container">
+					<h2>{{hoursLeft}}</h2>
+					<h5>HOURS</h5>
+				</div>
+				<div class="time-container">
+					<h2>{{minutesLeft}}</h2>
+					<h5>MINUTES</h5>
+				</div>
+				<div class="time-container">
+					<h2>{{secondsLeft}}</h2>
+					<h5>SECONDS</h5>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+
+	<div class="turn-info" ng-show="showTurnInfo">
+		<h3>You have not been selected to wield OSMO...yet.</h3>
+	</div>
+	
+	<div class="upload-reminder">
+		<i class="icon-warning"></i>
+		<div class="text">
+			<h3>Please Upload a Profile Picture!</h3>
+			Our CCDS mosaic needs more images to paint a better picture!
+		</div>
+	</div>
+	<button class="confirm-handoff" ng-click="confirmOsmoHandoff()" ng-if="confirmOsmo">
+		{{osmoHandoffMessage}}
+	</button>
+	<div class="handoff-container center-children panel" ng-if="requireHandoff">
 		<h3>Now that you have submit your video, who do you want to hand off OSMO?</h3>
-		<div class="user-selection" ng-repeat="user in handoffCandidates track by $index" ng-click="selectedCandidate = user.userId">{{user.userId}}</div>
+		<div class="user-selection-container">
+			<div class="user-selection" ng-class="{selected:selectedCandidate == user.userId}" ng-repeat="user in handoffCandidates track by $index" ng-click="selectCandidate(user.userId)">{{user.userId + " | Location: " + user.location}}</div>
+		</div>	
 		<button ng-click="confirmNextUser()">Confirm Selection</button>
 	</div>
-	<video ng-if="userVideoUrl" controls>
-		<source ng-src="{{userVideoUrl | trustUrl}}" type="video/mp4">
-	</video>
+	<div class="personal-upload panel center-children" ng-if="currentUser.videoUri">
+		<h3>{{videoPreviewInfo}}</h3>
+		<video ng-if="userVideoUrl" controls>
+			<source ng-src="{{userVideoUrl | trustUrl}}" type="video/mp4">
+		</video>
+	</div>
 	<form class="video-submission" method="POST" action="{{uploadLink}}" enctype='multipart/form-data' upload ng-if="showVideoSubmission">
 		<h3>Submit your video!</h3>
 		<input type="file" name="file_data" onchange="angular.element(this).scope().checkFile(this)">

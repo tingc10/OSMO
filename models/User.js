@@ -9,6 +9,7 @@ var userSchema = new Schema({
 		required: true,
 		unique: true
 	},
+	location: String,
 	password: String,
 	name : String,
 	videoUri : String,

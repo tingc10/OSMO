@@ -20,18 +20,30 @@ var express = require('express'),
 		nodemailer = require('nodemailer'),
 		smtpTransport = require('nodemailer-smtp-transport'),
 		multiparty = require('connect-multiparty')({uploadDir: __dirname + "/public/uploads"}),
-		fs = require('fs');
+		fs = require('fs'),
+		moment = require('moment');
+
+var runningTimeouts = {};
+
 /*
  *	Transporter settings used to send out emails
  */
-var transporter = nodemailer.createTransport(smtpTransport({
-    host: 'outbound.cisco.com',
-    port: 25,
-    auth: {
-        user: 'tingche',
-        pass: 'zW23FXdwr8o2'
-    }
-}));
+// var transporter = nodemailer.createTransport(smtpTransport({
+//     host: 'outbound.cisco.com',
+//     port: 25,
+//     auth: {
+//       user: 'tingche',
+//       pass: 'zW23FXdwr8o2'
+//     }
+// }));
+
+var transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: 'uxccdstudios@gmail.com',
+    pass: 'osmocampaign'
+  }
+});
 
 
 /*
@@ -51,15 +63,15 @@ var deleteFileInUploads = function(path){
  *	Generate the verification email link for the particular user
  *	@param {obj} user: the User obj from collection
  */
-var sendVerificationEmail = function(user){
-	var verificationLink = "http://"+hostname + "/register.html#/?u="+user.userId+"&v="+user.verification;
+var sendResetEmail = function(user){
+	var verificationLink = "http://"+ hostname + "/reset.html#/?u="+user.userId+"&v="+user.verification;
 	transporter.sendMail({
-    from: 'tingche@cisco.com',
-    // to: user.userId + '@cisco.com',
-    to: 'tingshen.chen@gmail.com',
-    subject: '[OSMO] Registration Link',
-    html: "<a href='"+ verificationLink + "' target='_blank'>Your OSMO registration link</a>" 
+    from: 'uxccdstudios@gmail.com',
+    to: serverConfig.testing ? 'tingche@cisco.com' : user.userId + '@cisco.com',
+    subject: '[OSMO] Password Reset Link',
+    html: "<a href='"+ verificationLink + "' target='_blank'>Your OSMO password reset link</a>" 
 	}, function(error, response) {
+	   console.log("Reset Email pending to " + user.userId);
 	   if (error) {
 	        console.log(error);
 	   } else {
@@ -69,22 +81,146 @@ var sendVerificationEmail = function(user){
 };
 
 /*
+ *	Generate the verification email link for the particular user
+ *	@param {obj} user: the User obj from collection
+ */
+var sendVerificationEmail = function(user){
+	var verificationLink = "http://"+hostname + "/register.html#/?u="+user.userId+"&v="+user.verification;
+	transporter.sendMail({
+    from: 'uxccdstudios@gmail.com',
+    to: serverConfig.testing ? 'tingche@cisco.com' : user.userId + '@cisco.com',
+    // to: 'tingche@cisco.com',
+    subject: '[OSMO] Registration Link',
+    html: "<a href='"+ verificationLink + "' target='_blank'>Your OSMO registration link</a>" 
+	}, function(error, response) {
+	   console.log("Verification Email pending to " + user.userId);
+	   if (error) {
+	        console.log(error);
+	   } else {
+	        console.log('Message sent');
+	   }
+	});
+};
+
+/*
+ *	Send an email to tell the user their time is up
+ *	@param {obj} user: the whose time is up
+ */
+var sendTimesUpEmail = function(user){
+	var osmoPage = "http://"+hostname + "/#/?n=main";
+	transporter.sendMail({
+    from: 'uxccdstudios@gmail.com',
+    to: serverConfig.testing ? "tingche@cisco.com" : user.userId + '@cisco.com',
+    cc: serverConfig.testing ? "" : "ddaood@cisco.com, tingche@cisco.com",
+    subject: '[OSMO] Your time with OSMO is up!',
+    html: "Time to submit your video!<br /><a href='"+ osmoPage+ "' target='_blank'>Login and upload!</a><br/>Also... Watch out for ninjas..." 
+	}, function(error, response) {
+	   console.log("Timesup Email pending to " + user.userId);
+	   if (error) {
+	      console.log(error);
+	   } else {
+	      console.log('Message sent');
+	   }
+	});
+};
+
+/*
+ *	Send an email to tell the user their time is up
+ *	@param {obj} user: the whose time is up
+ */
+var sendHandoffOsmoEmail = function(user){
+	var osmoPage = "http://"+hostname + "/#/?n=main";
+	transporter.sendMail({
+    from: 'uxccdstudios@gmail.com',
+    to: serverConfig.testing ? "tingche@cisco.com" : user.userId + '@cisco.com',
+    cc: serverConfig.testing ? "" : "ddaood@cisco.com, tingche@cisco.com",
+    subject: '[OSMO] Please Handoff the OSMO!',
+    html: "We got your submission, but please handoff the OSMO!<br /><a href='"+ osmoPage+ "' target='_blank'>Login and Confirm Handoff!</a>" 
+	}, function(error, response) {
+	   console.log("Handoff Osmo Email pending to " + user.userId);
+	   if (error) {
+	      console.log(error);
+	   } else {
+	      console.log('Message sent');
+	   }
+	});
+};
+
+/*
+ *	Send to whole UXCCDS new user upload
+ *	@param {obj} user: User that recently uploaded
+ */
+var sendNewUploadEmail = function(user){
+	
+	var userFocusLink = "http://"+hostname + "/#/?n=main&focus="+user.userId;
+	// get entire list of users to send email to
+	User.find({}, function(err, users){
+		if(err){
+			console.log("error retrieving everyone");
+		}
+		var toMass = '';
+		for(var i = 0, length = users.length; i < length; i++){
+			toMass += users[i].userId + "@cisco.com, ";
+		}
+		if (toMass != ''){
+			toMass = toMass.slice(0, toMass.length -2);
+			
+			transporter.sendMail({
+		    from: user.userId + '@cisco.com',
+		    to: serverConfig.testing ? 'tingche@cisco.com' : toMass,
+		    subject: '[OSMO] Check out '+user.name+"'s OSMO Video Submission!",
+		    html: "<a href='"+ userFocusLink + "' target='_blank'>Check out "+user.name+"'s Video Submission!</a>" 
+			}, function(error, response) {
+			   console.log("New Upload by " + user.userId);
+			   if (error) {
+		        console.log(error);
+			   } else {
+		        console.log('Message sent');
+
+			   }
+			});
+		}
+	});
+	
+};
+
+
+/*
+ *	Sends an email to tingche that there is something improper with the OSMO locations
+ *	@param {sring} errorString: the User obj from collection
+ */
+var sendErrorEmail = function(errorString){
+	transporter.sendMail({
+    from: 'uxccdstudios@gmail.com',
+    to: 'tingche@cisco.com',
+    subject: '[OSMO] Error in OSMO App',
+    html: errorString 
+	}, function(error, response) {
+	   console.log("Error Email");
+	   if (error) {
+        console.log(error);
+	   } else {
+	      console.log('Message sent');
+	   }
+	});
+};
+/*
  *	Sends a link to the user who has been selected as the next person to use the OSMO
  */
 var sendHandoffEmail = function(sender, receiver){
 	var dashboard = "http://"+hostname + "/dashboard";
 	transporter.sendMail({
-    // from: sender.userId + '@cisco.com',
-    // to: user.userId + '@cisco.com',
-    from: 'tingche@cisco.com',
-    to: 'tingche@cisco.com',
-    subject: '[OSMO] Registration Link',
-    html: "OSMO is coming your way! Login or register to confirm when you have received it!<br /><a href='"+ dashboard + "' target='_blank'>Your OSMO registration link</a>" 
+    from: sender.userId + '@cisco.com',
+    to: serverConfig.testing ? "tingche@cisco.com" : receiver.userId + '@cisco.com',
+    // to: "tingche@cisco.com",
+    subject: "[OSMO] You've been selected!!",
+    html: "OSMO is coming your way! Login or register to confirm when you have received it!<br /><a href='"+ dashboard + "' target='_blank'>OSMO Home Page</a>" 
 	}, function(error, response) {
+	   console.log("Handoff Osmo by " + sender.userId);
 	   if (error) {
-	        console.log(error);
+	      console.log(error);
 	   } else {
-	        console.log('Message sent');
+	      console.log('Message sent');
 	   }
 	});
 };
@@ -130,12 +266,125 @@ var getUserByUserId = function(userId, res, callback){
  */
 function requireLogin (req, res, next) {
   if (!req.user) {
+  	console.log("user was not logged in");
     res.redirect('/');
   } else {
     next();
   }
 };
 
+/*
+ *	Checks the returned list of users who have the OSMO, check that no region has more than one
+ *	@params {obj} users : list of all users who have the OSMO
+ */
+function sortOsmoLocations(users){
+	var osmoLocations = {};
+	var duplicateUsers = [];
+	for(var i = 0, length = users.length; i < length; i++){
+		switch(users[i].location){
+			case "SJ":
+			case "SF":
+			case "SF":
+				if(!osmoLocations["CA"]){
+					osmoLocations["CA"] = users[i];
+				} else {
+					duplicateUsers.push(users[i]);
+				}
+				
+				break;
+			case "TX":
+			case "SEATTLE":
+			case "OREGON":
+				if(!osmoLocations["USA"]){
+					osmoLocations["USA"] = users[i];
+				} else {
+					duplicateUsers.push(users[i]);
+				}
+				break;
+			case "GALWAY":
+			case "DUBLIN":
+			case "OSLO":
+				if(!osmoLocations["EU"]){
+					osmoLocations["EU"] = users[i];
+				} else {
+					duplicateUsers.push(users[i]);
+				}
+				break;
+			case "SHANGHAI":
+			case "KOREA":
+				if(!osmoLocations["ASIA"]){
+					osmoLocations["ASIA"] = users[i];
+				} else {
+					duplicateUsers.push(users[i]);
+				}
+				break;
+		}
+	}
+	if(duplicateUsers.length > 0){
+		var string = '';
+		for(var i = 0, length = duplicateUsers.length; i < length; i++){
+			string += duplicateUsers[i].userId + " ";
+		}
+		string += "is a duplicate user who has an OSMO...";
+		sendErrorEmail(string);
+	}
+	return osmoLocations;
+};
+
+
+/*
+ *	Gets all the users that can receive the OSMO in your location
+ *	@params {string} location : the user's current location
+ *	@return {obj}	locationFilter : JSON object for locating users in location
+ */
+var usersInSimilarLocation = function(location) {
+	var locationFilter;
+	switch(location){
+		case "SJ":
+		case "SF":
+		case "SF":
+			locationFilter = {
+				$or: [
+					{"location": "SF"},
+					{"location": "SJ"},
+					{"location": "SD"}
+				]
+			};
+			break;
+		case "TX":
+		case "SEATTLE":
+		case "OREGON":
+			locationFilter = {
+				$or: [
+					{"location": "TX"},
+					{"location": "SEATTLE"},
+					{"location": "OREGON"}
+				]
+			};
+			break;
+		case "GALWAY":
+		case "DUBLIN":
+		case "OSLO":
+			locationFilter = {
+				$or: [
+					{"location": "GALWAY"},
+					{"location": "DUBLIN"},
+					{"location": "OSLO"}
+				]
+			};
+			break;
+		case "SHANGHAI":
+		case "KOREA":
+			locationFilter = {
+				$or: [
+					{"location": "SHANGHAI"},
+					{"location": "KOREA"}
+				]
+			};
+			break;
+	}
+	return locationFilter;
+};
 
 
 
@@ -145,8 +394,73 @@ function requireLogin (req, res, next) {
  */
 var setSession = function(req, user){
 	req.session.user = user;
-
+	req.user = user;
 }
+
+/*
+ * Check users who have the Osmo and starts the timer if the app crashes
+ */
+var appInit = (function(){
+	User.find({hasOSMO: true}, function(err, users){
+		if(err){
+			console.log("Error finding users with the Osmo");
+
+		}
+		var osmoLocations = sortOsmoLocations(users);
+		
+		var twoDays = moment.duration(48, "hours");
+		var oneDay = moment.duration(24, "hours");
+		for(var i = 0, length = users.length; i < length; i++){
+			var user = users[i],
+					elapsedTime = moment().diff(moment(user.timeStart)),
+					durationElapsed = moment.duration(elapsedTime);
+					
+			if(user.uploadComplete) {
+				// if the user has the OSMO and has already uploaded, remind them to hand it off
+				var timeLeft = moment.duration(oneDay).subtract(durationElapsed);
+				if(timeLeft.asMilliseconds() > 0){
+					(function(user){
+						runningTimeouts[user.userId] = {
+							handoffTimer : setTimeout(function(){
+								sendHandoffOsmoEmail(user);
+								delete runningTimeouts[user.userId].handoffTimer;
+							}, serverConfig.testing ? 5*1000 : timeLeft.asMilliseconds())
+							// }, 60*1000)
+						};
+					})(user);
+					
+				} else {
+					(function(user){
+						sendHandoffOsmoEmail(user);
+					})(user);
+					
+				}
+				
+			} else {
+				// set the settimeout
+				var timeLeft = moment.duration(twoDays).subtract(durationElapsed);
+				if(timeLeft.asMilliseconds() > 0){
+					(function(user){
+						runningTimeouts[user.userId] = {
+							timesUp : setTimeout(function(){
+								
+								sendTimesUpEmail(user);
+								delete runningTimeouts[user.userId].timesUp;
+							}, serverConfig.testing ? 5*1000 : timeLeft.asMilliseconds())
+							// }, 60*1000)
+						};
+					})(user);
+						
+				} else {
+					(function(user){
+						sendTimesUpEmail(user);
+					})(user);
+					
+				}
+			}
+		}
+	});
+}());
 
 
 // app.use(logger('dev'));
@@ -191,11 +505,11 @@ app.use(function(req, res, next) {
 app.get('/dashboard/videos/:videoId', requireLogin, function(req, res){
 	var videoId = req.params.videoId ? "&userId="+req.user.userId+"&videoId="+req.params.videoId : "";
 	// should only get here if session accepted 
-	res.redirect("/#?navigate=dashboard" + videoId);
+	res.redirect("/#?n=dashboard" + videoId);
 });
 
 app.get('/dashboard', requireLogin, function(req, res){
-	res.redirect("/#?navigate=dashboard");
+	res.redirect("/#?n=dashboard");
 });
 
 
@@ -218,7 +532,10 @@ app.post('/login', function(req, res){
 	getUserByUserId(userId, res, function(user){
 		if(user.password == password) {
 			setSession(req, user);
+
 			res.status(200).send({msg:'Session saved', user: user.toJSON()});
+		} else if(!user.password) {
+			res.status(200).send('unregistered');
 		} else {
 			res.status(200).send('Incorrect Password');
 		}
@@ -234,6 +551,17 @@ app.get('/currentUser', function(req, res){
 		res.status(200).send({msg:"Logged In", user: req.user});
 
 	}
+});
+/*
+ *	Just resend verification link
+ */
+app.get('/reset/user/:userId', function(req, res){
+	var userId = req.params.userId;
+	getUserByUserId(userId, res, function(user){
+		sendResetEmail(user);
+		res.status(200).send("sent out mail");		
+		
+	});
 });
 /**
  *	Check to see if user is already registered,
@@ -302,6 +630,19 @@ app.post('/video', requireLogin, function(req, res){
 						console.log("Could not save video uri: " + err);
 						res.status(400).send(err);
 					}
+					if(runningTimeouts[user.userId] && runningTimeouts[user.userId].timesUp){
+						clearTimeout(runningTimeouts[user.userId].timesUp);
+						delete runningTimeouts[user.userId].timesUp;
+					}
+					console.log('setting handoff timer');
+					runningTimeouts[user.userId] = {
+						handoffTimer : setTimeout(function(){
+							sendHandoffOsmoEmail(user);
+							delete runningTimeouts[user.userId].handoffTimer;
+						}, serverConfig.testing ? 60*1000 : 86400000)
+						// }, 60*1000)
+					};
+					sendNewUploadEmail(user);
 					res.status(200).send("videoUri saved");
 				});
 			});
@@ -312,22 +653,39 @@ app.post('/video', requireLogin, function(req, res){
 	
 });
 
+/*
+ *	Start the recipient's timeStart and hand off the OSMO. Starts setTimeout to 48 hours
+ */
 app.post('/osmo/db/confirmHandoff', requireLogin, function(req, res){
 	var recipientId = req.body.recipient;
 	var senderId = req.body.sender;
 	getUserByUserId(recipientId, res, function(recipient){
 		recipient.timeStart = new Date();
 		recipient.hasOSMO = true;
+		
 		recipient.save(function(err){
 			if(err) {
 				res.status(400).send({msg:"problem saving...", error: err});
 			}
+			runningTimeouts[recipient.userId] = {
+				timesUp : setTimeout(function(){
+					sendTimesUpEmail(recipient);
+					delete runningTimeouts[recipient.userId].timesUp;
+				}, serverConfig.testing ? 60*1000 : 172800000)
+				// }, 60*1000)
+			};
+
 			getUserByUserId(senderId, res, function(sender){
 				sender.hasOSMO = false;
 				sender.save(function(err){
 					if(err){
 						res.status(200).send({msg:'OSMO handed off but update who has OSMO', error: err});
 					}
+					if(runningTimeouts[sender.userId] && runningTimeouts[sender.userId].handoffTimer) {
+						clearTimeout(runningTimeouts[sender.userId].handoffTimer);
+						delete runningTimeouts[sender.userId].handoffTimer;
+					}
+					
 					res.status(200).send({msg:"Successful confirmation"});
 				});
 			});
@@ -339,11 +697,11 @@ app.post('/osmo/db/confirmHandoff', requireLogin, function(req, res){
  *	Set new user to hold osmo and send email to them
  */
 app.post('/osmo/db/refer', requireLogin, function(req, res){
-	var recipient = req.body.recipient;
+	var recipientId = req.body.recipientId;
 	if(!req.user.hasOSMO){
 		console.log(req.user.userId + " does not have the osmo??")
 	}
-	User.find({$or:[{userId:req.user.userId}, {userId: recipient}]}, function(err, users){
+	User.find({$or:[{userId:req.user.userId}, {userId: recipientId}]}, function(err, users){
 		if(err){
 			res.status(400).send({msg: "error", error: err});
 		}
@@ -355,7 +713,7 @@ app.post('/osmo/db/refer', requireLogin, function(req, res){
 			currentUser = users[1];
 			recipientUser = users[0];
 		}
-		currentUser.handOffTo = recipientUser.userId;
+		currentUser.handoffTo = recipientUser.userId;
 		
 		currentUser.save(function(err){
 			if(err){
@@ -369,7 +727,7 @@ app.post('/osmo/db/refer', requireLogin, function(req, res){
 					res.status(400).send({msg:"error: saved handoff but not referrer", error: err});
 
 				}
-				sendHandoffEmail(currentUser.userId, recipient.userId);
+				sendHandoffEmail(currentUser, recipientUser);
 				res.status(200).send({msg:"success: next user selected"});
 			});
 		});
@@ -377,20 +735,46 @@ app.post('/osmo/db/refer', requireLogin, function(req, res){
 
 	});
 });
+
+/*
+ *	Get all users with OSMO
+ */
+app.get('/osmo/db/users/hasOSMO', function(req, res){
+	User.find({hasOSMO: true}, 'userId location', function(err, users){
+		if(err){
+			res.status(400).send({msg:"error", error: err});
+
+		}
+		var osmoLocations = sortOsmoLocations(users);
+		res.status(200).send({msg:"success", users: osmoLocations});
+	});
+});
+
 /*
  *	Get all users that matches a specific filter
  */
 app.get('/osmo/db/users/:filter', function(req, res){
 	var filter = req.params.filter;
-	console.log(filter);
+	// console.log(filter);
 	if(filter == "hasnotupload"){
-		User.find({uploadComplete: {$exists:false}}, function(err, users){
+		if(!req.user){
+			res.status(400).send('You must be logged in to get users who have not uploaded');
+		}
+		var locationFilter = usersInSimilarLocation(req.user.location);
+		var hasNotUpload = {uploadComplete: {$exists:false}};
+		User.find({$and:[locationFilter, hasNotUpload]}, 'userId location').sort({location:-1}).exec(function(err, users){
 			if(err){
-				res.status(400).send({msg: "error", error: err});
-
+				res.status(400).send({msg:"Error", error: err});
 			}
-			res.status(200).send({msg: "success", users: users});
+			res.status(200).send({msg:"success", users: users})
 
+		});
+	} else if (filter == "media") { 
+		// Get all users with media
+		getUsersWithMedia(function(usersJSON){
+			res.status(200).send(usersJSON);
+		}, function(err){
+			res.status(400).send('could not retrieve users');
 		});
 	} else {
 		// get all users by default
@@ -426,17 +810,7 @@ app.post('/osmo/db/:userId/vimeoThumbnail', function(req, res) {
 // app.get('/osmo/db/users/:userId', function(req, res){
 
 // });
-/**
- *	Get all users with media
- */	
-app.get('/osmo/db/users/media', function(req, res){
-	getUsersWithMedia(function(usersJSON){
-		res.status(200).send(usersJSON);
-	}, function(err){
-		res.status(400).send('could not retrieve users');
-	});
-	
-});
+
 /**
  *	Get all users
  */	
@@ -477,6 +851,27 @@ app.post('/osmo/db/users', function(req, res) {
 		})
 
 	});
+});
+
+/*
+ *	Update password/ reset pasword link
+ *	Cache Session after completion
+ */
+app.put('/osmo/db/users', function(req, res) {
+	var data = req.body,
+			userId = data.userId,
+			password = data.password;
+	User.findOneAndUpdate({userId: userId}, {password: password}, {new: true}, function(err, user){
+		if(err) {
+			console.log("Error updating password:" + err);
+			res.status(400).send({msg: "Could not update password...", error: err});
+		}
+		console.log(userId+' has successfully updated their password.');
+		// save user session when account is created
+		setSession(req, user);
+		res.status(200).send("success");
+	});
+	
 });
 
 app.post('/uploads/:user/selfie', multiparty, function(req, res) {

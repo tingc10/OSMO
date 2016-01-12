@@ -1,18 +1,21 @@
 <div class="panel-container">
 	<i class="icon-exit" ng-click="toggleLogin(false)"></i>
 	<div class="form-wrapper login" ng-hide="register">
+		<i class="icon-left-arrow" ng-click="showForgetPassword = false" ng-show="showForgetPassword"></i>
+
 		<label for="cisco-id">
 			<h2>Username</h2>
 		</label>
 		<input type="text" name="cisco-id" ng-model="userId" />
-		<label for="password">
+		<label for="password" ng-hide="showForgetPassword">
 			<h2>Password</h2>
 		</label>
-		<input type="password" name="password" ng-model="password" ng-keyup="monitorSubmission($event)" />
+		<input type="password" name="password" ng-model="password" ng-keyup="monitorSubmission($event)" ng-hide="showForgetPassword" />
+		<div class="forgot-password" ng-click="showForgetPassword = true" ng-hide="showForgetPassword">Forgot Password</div>
 		<h4>{{loginResponse}}</h4>
-		<button ng-click="login()">Login</button>
-		<hr>
-		<h3 class="register-account" ng-click="register=true">Register Account</h3>
+		<button ng-click="showForgetPassword ? resetPassword() : login()">{{showForgetPassword ? "Reset Password" : "Login"}}</button>
+		<hr ng-hide="showForgetPassword">
+		<h3 class="register-account" ng-click="register=true" ng-hide="showForgetPassword">Register Account</h3>
 	</div>
 	<div class="form-wrapper signup" ng-show="register">
 		<i class="icon-left-arrow" ng-click="register=false"></i>
@@ -20,7 +23,7 @@
 			<label for="cisco-id">
 				<h2>Enter your Cisco ID</h2>
 			</label>
-			<input type="text" name="cisco-id" ng-model="userId">
+			<input type="text" name="cisco-id" ng-model="userId" submit-with-enter="submitRegistration">
 			<h4>{{registrationResponse}}</h4>
 			<button ng-click="submitRegistration()">Next</button>
 		</div>

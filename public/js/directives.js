@@ -47,6 +47,7 @@ angular.module('OsmoApp.directives', [])
 										
 										
 									} else {
+										
 										console.log('no preview available');
 									}
 								});
@@ -191,6 +192,7 @@ angular.module('OsmoApp.directives', [])
 						
 					} else {
 						console.log('no preview available');
+
 					}
 
 					if(data.pictures.sizes.length > 0){
@@ -323,41 +325,41 @@ angular.module('OsmoApp.directives', [])
 			 */
 			var setNewLink = function(imageInfo, callback){
 				
-				$timeout(function(){
-					var link = imageInfo.link;
-					scope.image = imageInfo;
-					if(topLayer == "front"){
-						scope.linkTwo = link;
-					} else {
-						scope.linkOne = link;
-					}
-					loadImageCallback(link, function(response){
-						if(response.msg == "success"){
-							$timeout(function(){
-								var tween = new TimelineLite({paused: true});
-								var front, back;
-								if(topLayer == "front"){
-									topLayer = "back";
-									front = imageLoaders[0];
-									back = imageLoaders[1];
-								} else {
-									topLayer = "front";
-									front = imageLoaders[1];
-									back = imageLoaders[0];
-								}
-								tween.set(back, {autoAlpha: 1})
-								.to(front, 0.3, {autoAlpha: 0})
-								.set(front, {zIndex: 1})
-								.set(back, {zIndex: 2});
-								tween.play();
-							});
+				
+				var link = imageInfo.link;
+				scope.image = imageInfo;
+				if(topLayer == "front"){
+					scope.linkTwo = link;
+				} else {
+					scope.linkOne = link;
+				}
+				loadImageCallback(link, function(response){
+					if(response.msg == "success"){
+						$timeout(function(){
+							var tween = new TimelineLite({paused: true});
+							var front, back;
+							if(topLayer == "front"){
+								topLayer = "back";
+								front = imageLoaders[0];
+								back = imageLoaders[1];
+							} else {
+								topLayer = "front";
+								front = imageLoaders[1];
+								back = imageLoaders[0];
+							}
+							tween.set(back, {autoAlpha: 1})
+							.to(front, 0.3, {autoAlpha: 0})
+							.set(front, {zIndex: 1})
+							.set(back, {zIndex: 2});
+							tween.play();
+						});
 
-						} else {
-							console.log('failed to load image');
-						}
-						callback();
-					});
+					} else {
+						console.log('failed to load image');
+					}
+					callback();
 				});
+				
 				
 				
 			};
@@ -490,6 +492,24 @@ angular.module('OsmoApp.directives', [])
 			};
 			scope.checkEmail = false;
 			scope.register = false;
+			scope.showForgetPassword = false;
+			/*
+			 *	Request send password link
+			 */
+			scope.resetPassword = function(){
+				console.log(scope.userId);
+				$http({
+					method: "GET",
+					url: "/reset/user/" + scope.userId,
+				}).then(function(response){
+					scope.loginResponse = "Please check your email for reset link!";
+					console.log(response);
+					// scope.checkEmail = true;
+					
+				}, function(response){
+					scope.loginResponse = "Yikes! A network error occurred, try again in a bit...";
+				});
+			};
 			/*
 			 *	Waits for enter button and logs user in
 			 */
@@ -528,20 +548,20 @@ angular.module('OsmoApp.directives', [])
 				}).then(function(response){
 					console.log(response);
 					if(response.data.msg =="Session saved"){
+						
+
+
+
 						scope.toggleLogin(false);
-						scope.loggedIn = true;
-						scope.currentPage = "dashboard";
-						scope.currentUser = response.data.user;
-						scope.getVideo(scope.currentUser.videoUri, function(data){
-							console.log(data);
-							scope.userVideoData = data;
-							if(data.files[0]){
-								scope.userVideoUrl = data.files[0].link;
-								
-							} else {
-								console.log('no preview available');
-							}
+						
+						scope.navigate("dashboard");
+						$timeout(function(){
+							scope.userInit(response);
 						});
+						
+					} else if(response.data == "unregistered"){
+						scope.loginResponse = "This account is not registered yet";
+						clearResponse();
 					} else {
 						scope.loginResponse = "Wrong Username or Password";
 						clearResponse();
@@ -630,7 +650,59 @@ angular.module('OsmoApp.directives', [])
 		}
 	}
 })
-.directive('navBar', function($http, $location, $timeout){
+.directive('reset', function($location, $http, $window){
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs){
+			scope.showRegistration = false;
+			var params = $location.search();
+			if(params.u && params.v) {
+				$http({
+					method: "GET",
+					url: "/register/user/"+params.u+"/"+params.v
+				}).then(function(response){
+					if(response.data == "verified"){
+						scope.userId = params.u;
+						scope.showRegistration = true;
+					} else if(response.data == "unverified") {
+						scope.registrationMessage = "You are not authorized to reset the password for this account";
+					} else {
+						scope.registrationMessage = "Oops, you stumbled accross the wrong page...";
+
+					}
+				}, function(response){
+					console.log("Network error...");
+				});
+			} else {
+				scope.registrationMessage = "Oops, you stumbled accross the wrong page...";
+			}
+			scope.resetAccount = function(){
+				if(scope.password.length > 0) {
+					$http({
+						method: "PUT",
+						url: "/osmo/db/users",
+						data: {
+							userId : scope.userId,
+							password: scope.password
+						}
+					}).then(function(response){
+						console.log(response);
+						if(response.data == "success"){
+							$window.location.href = '/dashboard'
+						}
+					}, function(err){
+						console.log("Something went wrong :" + err);
+					});
+				} else {
+					console.log("Please create a password!");
+					return;
+				};
+				
+			};
+		}
+	}
+})
+.directive('navBar', function($http, $location, $timeout, $rootScope){
 	return {
 		restrict: 'A',
 		templateUrl: './templates/nav-bar.html',
@@ -641,6 +713,29 @@ angular.module('OsmoApp.directives', [])
 			scope.loggedIn = false;
 			scope.userVideoData;
 			scope.userVideoUrl;
+			/*
+			 *	Intialization function that is run after receiving current user info
+			 *	@params {obj} response : response from server
+			 */
+			scope.userInit = function(response){
+
+				scope.loggedIn = true;
+				scope.currentUser = response.data.user;
+				$rootScope.$emit('updateCurrentUser', response.data.user);
+				if(scope.currentUser.videoUri){
+					scope.getVideo(scope.currentUser.videoUri, function(data){
+						if(data.files && data.files[0]){
+							scope.userVideoUrl = data.files[0].link;
+							scope.videoPreviewInfo = "Your Video Submission";
+						} else {
+							console.log('no preview available');
+							scope.videoPreviewInfo = "Your video is currently unavailable for viewing.";
+						}
+					});
+				}
+				
+				
+			};
 			/*
 			 *	Requests video informations from Vimeo, then sends data to callback
 			 *	After getting the video, it saves the user's video info to scope
@@ -664,31 +759,31 @@ angular.module('OsmoApp.directives', [])
 			/*
 			 *	Grab current user data and load video information from vimeo
 			 */ 
-			var getCurrentUser = function(){
+			scope.getCurrentUser = function(){
+				console.log("getting current user...");
 				$http({
 					method: 'GET',
 					url: "/currentUser"
 				}).then(function(response){
+					console.log(response);
 					if(response.data.msg == "Logged In"){
-						scope.loggedIn = true;
-						scope.currentUser = response.data.user;
-						if(scope.currentUser.videoUri){
-							scope.getVideo(scope.currentUser.videoUri, function(data){
-								if(data.files && data.files[0]){
-									scope.userVideoUrl = data.files[0].link;
-									
-								} else {
-									console.log('no preview available');
-								}
-							});
-						}
-						
-						console.log(response.data.user);
-						if(params.navigate){
-							scope.currentPage = params.navigate;
+						$timeout(function(){
+							console.log('user logged in');
+							scope.userInit(response);
+							
+						});
+						if(params.n){
+							scope.navigate(params.n);
+
 						}
 					} else {
 						// not logged in
+						if(params.n && params.n != "dashboard"){
+							scope.currentPage = params.n;
+
+						} else {
+							scope.navigate("main");
+						}
 					}
 				}, function(err){
 					console.log(err);
@@ -701,7 +796,11 @@ angular.module('OsmoApp.directives', [])
 			 */
 			scope.navigate =  function(selection){
 				scope.currentPage = selection;
+				$location.path("/").search('n', selection);
+				
+				
 			};
+
 			/*
 			 *	Log user out of current session
 			 */
@@ -711,7 +810,8 @@ angular.module('OsmoApp.directives', [])
 					url: "/logout"
 				}).then(function(response){
 					scope.loggedIn = false;
-					scope.currentPage = "main";
+					scope.navigate("main");
+
 				}, function(err){
 					console.log(err);
 				});
@@ -719,7 +819,7 @@ angular.module('OsmoApp.directives', [])
 			/*
 			 *	Initialize and information
 			 */
-			if(params.videoId && params.navigate == "dashboard" && params.userId) {
+			if(params.videoId && params.n == "dashboard" && params.userId) {
 				// User recently submitted video, save videoId into database
 				$http({
 					method: "POST",
@@ -730,12 +830,20 @@ angular.module('OsmoApp.directives', [])
 					}
 				}).then(function(response){
 					console.log(response);
-					getCurrentUser();
+					$timeout(function(){
+						scope.getCurrentUser();
+					});
+					
 				}, function(err){
 					console.log(err);
 				});
+				$location.url($location.path());
+				scope.navigate('dashboard');
 			} else {
-				getCurrentUser();
+				$timeout(function(){
+					scope.getCurrentUser();
+				});
+				
 			}
 		}
 	}
@@ -760,7 +868,7 @@ angular.module('OsmoApp.directives', [])
 			scope.submit = function() {
 		    if(!scope.uploadLink && !scope.file)
 		      return;
-		    console.log("runnning...");
+		    scope.$emit('toggleLoader', true);
 			  
 		  };
 
@@ -777,14 +885,23 @@ angular.module('OsmoApp.directives', [])
 		}
 	}
 })
-.directive('dashboard', ['$http', 'Upload', function($http, Upload){
+.directive('dashboard', ['$http', 'Upload', '$timeout', '$rootScope', function($http, Upload, $timeout, $rootScope){
 	return {
 		restrict: 'A',
 		templateUrl: "./templates/dashboard.html",
 		link: function(scope, element, attrs) {
+			var cacheReminder = element[0].getElementsByClassName('upload-reminder')[0];
 			scope.showSubmission = false;
 			scope.requireHandoff = false;
 			scope.showVideoSubmission = false;
+			scope.confirmOsmo = null;
+			scope.releaseNinja = false;
+			scope.showCountdown = false;
+			scope.showTurnInfo = false;
+			/*
+			 *	Method that runs after you upload a photo
+			 *	For more information about parameters, check out the angular-file-upload API
+			 */
 			scope.selfieSelected = function($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event){
 				console.log(scope.selfiePreview);
 				if(scope.selfiePreview){
@@ -794,7 +911,32 @@ angular.module('OsmoApp.directives', [])
 				}
 				
 			};
+			var doubleCheckConfirmation = false;
+			/*
+			 *	Confirms that a user has given the OSMO or recieved the OSMO, triggers "times start" for new user
+			 */
+			scope.confirmOsmoHandoff = function() {
+				$http({
+					method: "POST",
+					url: '/osmo/db/confirmHandoff',
+					data: scope.confirmOsmo
+				}).then(function(response){
+					console.log(response);
+					scope.confirmOsmo = false;
+					scope.showCountdown = false;
+					scope.$emit("showNetworkResponse", "Handoff Confirmed");
+					scope.getCurrentUser();
+				}, function(err){
+					scope.$emit("showNetworkResponse", "Network Error, try again", error);
+				});
+			
+				
+			};
+			/*
+			 *	Sends the uploaded profile picture to the server
+			 */
 			scope.uploadSelfie = function(){
+				scope.$emit('toggleLoader', true);
 				Upload.upload({
 				  url: '/uploads/'+scope.currentUser.userId+'/selfie',
 				  method: 'POST',
@@ -806,39 +948,123 @@ angular.module('OsmoApp.directives', [])
 					scope.showSubmission = false;
           console.log('Success. Response: ', resp.data);
           scope.currentUser.selfieLocation = resp.data.fileLocation;
+					TweenMax.to(cacheReminder, 0.4, {autoAlpha: 0, padding: 0, height: 0, ease: Power2.easeOut});
+					scope.$emit('toggleLoader', false);
+          scope.$emit('showNetworkResponse', "Upload Success");
+          
         }, function (resp) {
           console.log('Error status: ', resp);
+          scope.$emit('showNetworkResponse', "Network Error, please try again later", true);
+          
         }, function (evt) {
           var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
           console.log('progress: ' + progressPercentage + '% ', evt.config.data);
-        });;
+        });
 			};
+			/*
+			 *	Select a candidate to take the OSMO
+			 *	@params {string} userId : the user to hand off the OSMO to
+			 */
+			scope.selectCandidate = function(userId) {
+				console.log(userId);
+				scope.selectedCandidate = userId;
+			}
+			/*
+			 *	Sends an email to the selected candidate as the informing they are the next OSMO weilder
+			 */
 			scope.confirmNextUser = function(){
 				if(scope.selectedCandidate){
 					$http({
 						method: "POST",
 						url: '/osmo/db/refer',
 						data: {
-							recipient: scope.selectedCandidate
+							recipientId: scope.selectedCandidate
 						}
 					}).then(function(response){
 						console.log(response);
 						scope.requireHandoff = false;
+						scope.confirmOsmo = {sender: scope.currentUser.userId, recipient: scope.selectedCandidate};
+						scope.osmoHandoffMessage = "I have handed off the OSMO device to " + scope.selectedCandidate;
+						scope.$emit('showNetworkResponse', scope.selectedCandidate + " has been selected as the next OSMO Candidate");
+
 					}, function(err){
+						console.log(err);
 						console.log('could not refer user');
-					})
+						scope.$emit('showNetworkResponse', "Could not refer user, try again.", true);
+					});
 				} else {
 					console.log('no user selected');
 				}
 			};
-			scope.$watch(scope.currentUser,function(newVal, oldVal){
-				var user = scope.currentUser;
+			var startClock = function(user){
+				
+				console.log(user.timeStart);
+				// var endDate = moment(user.timeStart).add(2, 'days');
+				var totalTime = moment.duration(48, "hours");
+				(function animloop() {
+				  requestAnimFrame(animloop);
+				  // scope.$apply(function(){
+
+				  $timeout(function(){
+						var elapsedTime = moment().diff(moment(user.timeStart)),
+								durationElapsed = moment.duration(elapsedTime),
+								timeLeft = moment.duration(totalTime).subtract(durationElapsed);
+						scope.hoursLeft = Math.floor(timeLeft.asHours());
+				  	scope.minutesLeft = timeLeft.minutes();
+				  	scope.secondsLeft = timeLeft.seconds();
+				  	
+				  	if(timeLeft.asSeconds() < -500 && !scope.releaseNinja){
+							// times up!
+							scope.releaseNinja = true;
+						} else if(timeLeft.asSeconds() > 0 && scope.releaseNinja){
+							scope.releaseNinja = false;
+						}
+
+				  	// console.log(scope.timeLeft);
+				  });
+				  	
+				  // });
+				})();
+				
+			};
+
+			$timeout(function(){
+				scope.getCurrentUser();
+			});
+			$rootScope.$on('updateCurrentUser',function(e, user){
+				console.log("watch fired!");
 				if(user){
+					console.log("Refreshed user object");
 					if(user.hasOSMO) {
-						scope.showSubmission = true;
+						if(!user.videoUri) {
+							scope.showVideoSubmission = true;
+						}
+						console.log("showing countdown!");
+						scope.showCountdown = true;
+						startClock(user);
+						if(user.handoffTo){
+							// user has the osmo and needs to confirm handing off to other user
+							scope.confirmOsmo = {sender: user.userId, recipient: user.handoffTo};
+							scope.osmoHandoffMessage = "I have handed off the OSMO device to " + user.handoffTo;
+						}
+						// scope.timeLeft = Math.abs(new Date() - user.timeStart)
+					} else {
+						if(user.referer && !user.uploadComplete) {
+							scope.confirmOsmo = {sender: user.referer, recipient: user.userId};
+							scope.osmoHandoffMessage = "I have received the OSMO";
+						}
 					}
-					if(user.uploadComplete && !user.handOffTo){
-						// user has uploaded but has not handed off to anyoe
+					if(!user.referer && !user.videoUri && !user.hasOSMO) {
+						scope.showTurnInfo = true;
+					} else {
+						scope.showTurnInfo = false;
+					}
+					if(!user.selfieLocation) {
+						TweenMax.to(cacheReminder, 0.4, {autoAlpha: 1, padding: 20, height: 'initial'});
+					}
+
+					if(user.uploadComplete && !user.handoffTo){
+						// user has uploaded but has not handed off to anyone
 						$http({
 							method: "GET",
 							url: "/osmo/db/users/hasnotupload"
@@ -851,17 +1077,83 @@ angular.module('OsmoApp.directives', [])
 						});
 					}
 				} else {
-					console.log("huh... error...");
+					console.log("Have not gotten user object yet...", user);
 				}
+				
 			});
 			
 		}
 
 	}
 }])
+.directive('networkResponse', function($timeout){
+	return {
+		restrict: 'A',
+		template: '<div class="text">{{networkResponse}}</div>',
+		link: function(scope, element, attrs) {
+			scope.networkError = false;
+			var cacheText = element[0].getElementsByClassName('text')[0];
+			var tween = new TimelineMax({paused:true});
+			tween.set(element, {transformOrigin:'0% 0%'})
+			.to(element, 0.4, {scaleY: 1, ease: Power2.easeOut})
+			.to(cacheText, 0.2, {autoAlpha: 1, ease:Power2.easeOut});
+			scope.$on("showNetworkResponse", function(e, message, error){
+				
+				if(error) {
+					scope.networkError = true;
+				} else {
+					scope.networkError = false;
+				}
+				scope.networkResponse = message;
+				tween.play();
+				$timeout(function(){
+        	tween.reverse();
+        }, 3000);
+
+			});
+		}
+	}
+})
 .directive('guidelines', function(){
 	return {
 		restrict: 'A',
 		templateUrl: './templates/guidelines.html'
+	}
+})
+.directive('loader', function(){
+	return {
+		restrict: 'A',
+		templateUrl: './templates/loader.html',
+		link: function(scope, element, attrs){
+			var loaderSvg = document.getElementById('draw');
+			var tween = new TimelineMax({paused: true, repeat: -1});
+
+
+			tween.set(loaderSvg, {strokeDasharray:"100% 200%", strokeDashoffset: "0%"})// enter top
+			.to(loaderSvg, 2, {strokeDashoffset:"300%", ease: Power0.easeNone});
+			tween.play();
+			scope.$on('toggleLoader', function(e,show){
+				if(show) {
+					TweenLite.to(element, 0.4, {autoAlpha: 1});
+				} else {
+					TweenLite.to(element, 0.4, {autoAlpha: 0});
+
+				}
+			});
+		}
+	}
+})
+.directive('submitWithEnter', function(){
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs) {
+			element.on('keyup', function(e){
+				scope.$apply(function(){
+					if(e.keyCode == 13) {
+						scope[attrs.submitWithEnter]();
+					}
+				});
+			});
+		}
 	}
 });

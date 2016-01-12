@@ -18,6 +18,15 @@ if(!window.loadImageCallback){
 	};
 }
 	
+// shim layer with setTimeout fallback
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
 angular.module('OsmoApp', ['OsmoApp.directives','OsmoApp.controllers', 'ngFileUpload'])
 .filter("trustUrl", ['$sce', function ($sce) {
   return function (recordingUrl) {

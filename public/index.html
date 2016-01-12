@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
-<title>CCDS | Life of Design</title>
+<title>CCDS | OSMO Where Are You?</title>
+<link rel="icon" type="image/ico" href="./img/cloud_favicon.ico">
 <link href="./stylesheets/main.css" rel="stylesheet">
 <link href="./icomoon/style.css" rel="stylesheet">
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
 <script src="./node_modules/angular/angular.min.js"></script>
 <script src="./node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 <script src="./node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
@@ -22,5 +24,6 @@
 	<div class="login-panel" login-panel></div>
 	<div class="container dashboard center-children" dashboard ng-if="currentPage=='dashboard'"></div>
 	<div class="container guidelines" guidelines ng-if="currentPage == 'guidelines'"></div>
+	<div class="loader-overlay" loader></div>
 </body>
 </html>
