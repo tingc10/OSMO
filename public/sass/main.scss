@@ -640,11 +640,11 @@ nav {
 .focus-item {
 	@extend .center-children;
 	position: absolute;
-  background: white;
+  background: black;
   width: 80%;
-  height: 73%;
+  height: 75.1%;
   top: 15%;
-  left: 15%;
+  left: 17%;
   overflow: hidden;
   img {
   	object-fit: cover;
@@ -652,6 +652,11 @@ nav {
   }
   video {
   	height: 100%;
+  }
+  i {
+  	font-size: 1.2vh;
+  	color: rgba(255, 255, 255, 0.8);
+
   }
 }
 
@@ -676,6 +681,7 @@ nav {
 
 .video-wrappers {
 	background-color: rgba(0, 0, 0, 0.8);
+	cursor: pointer;
   // float: left;
   &.small {
   	width: $defaultUnitSize*20;
@@ -683,7 +689,7 @@ nav {
   	// background-color: $lightYellow;
   }
   &.extra-wide {
-  	width: $defaultUnitSize*32;
+  	width: $defaultUnitSize*30;
   	height: $defaultUnitSize*18;
   	// background-color: $lightGreen;
 
@@ -693,6 +699,10 @@ nav {
 
   	width: $defaultUnitSize*16;
   	height: $defaultUnitSize*12;
+  }
+  &.focus {
+  	width: $defaultUnitSize*69;
+  	height: $defaultUnitSize*35;
   }
   .image-loader {
   	position: absolute;
@@ -743,6 +753,34 @@ nav {
 .video-preview {
 	height: 100px;
 }
+
+.pinned-user {
+	@include display-flex;
+	width: 100%;
+	height: 100%;
+	position: relative;
+	.image-container {
+		height: 100%;
+	  width: 35vh;
+	  position: relative;
+	  div {
+	  	width: 100%;
+	  	height: 100%;
+	  	background-position: center;
+	  	background-size: cover;
+	  	background-repeat: no-repeat;
+	  }
+	}
+	.meta {
+		@include display-flex;
+		@include flex(1 1 0);
+		@include justify-content(center);
+		@include align-items(center);
+		@include flex-direction(column);
+		color: $redOrange;
+	}
+}
+
 
 
 

@@ -1,12 +1,12 @@
 angular.module('OsmoApp.directives', [])
-.directive('mosaic', function($timeout, $http){
+.directive('mosaic', function($timeout, $http, $location){
 	return {
 		retrict: 'A',
 		templateUrl: './templates/mosaic.html',
 		link: function(scope, element, attrs) {
 			scope.images = [];
 			scope.undisplayedMedia = [];
-			scope.unloadedImages = 40;
+			// scope.unloadedImages = 40;
 			scope.loremFlickr = {
 				link:'//loremflickr.com/320/240/office,people,collaboration', 
 				user: null
@@ -16,6 +16,10 @@ angular.module('OsmoApp.directives', [])
 			var stampElements = element[0].getElementsByClassName('stamp');
 			var osmoImage = element[0].getElementsByClassName('osmo-image')[0];
 			var osmoHeight;
+			var params = $location.search();
+			/*
+			 * Triggers packery after DOM is rendered
+			 */
 			var layoutAfterRender = function(){
 				$timeout(function(){
 					scope.pckry.layout();
@@ -32,51 +36,52 @@ angular.module('OsmoApp.directives', [])
 				$timeout(function(){
 					var lengthUndisplayed = scope.undisplayedMedia.length,
 							randomIndex;
-					if(scope.unloadedImages){
-						scope.unloadedImages--;
-						if(lengthUndisplayed > 0) {
-							randomIndex = Math.floor(Math.random()*lengthUndisplayed);
-							var tmp = scope.undisplayedMedia[randomIndex];
-							scope.undisplayedMedia.splice(randomIndex, 1);
-							if(!scope.currentVideo){
-								scope.getVideo(tmp.user.videoUri, function(data){
-									if(data.files[0]){
-										$timeout(function(){
-											scope.currentVideo = data.files[0].link;
-										});
-										
-										
-									} else {
-										
-										console.log('no preview available');
-									}
-								});
-							}
-							loadImageCallback(tmp.link, function(response){
-								
-								if(response.msg == "success") {
-									tmp.link = response.image.src;
-									scope.images.push(tmp);
+					// if(scope.unloadedImages){
+						// scope.unloadedImages--;
+					if(lengthUndisplayed > 1) {
+						randomIndex = Math.floor(Math.random()*lengthUndisplayed);
+						var tmp = scope.undisplayedMedia[randomIndex];
+						scope.undisplayedMedia.splice(randomIndex, 1);
+						if(!params.focus && !scope.currentVideo && tmp.user.videoUri){
+							scope.getVideo(tmp.user.videoUri, function(data){
+								if(data.files[0]){
+									$timeout(function(){
+										scope.currentVideo = data.files[0].link;
+									});
+									
+									
 								} else {
-									console.log('image load error...');
+									
+									console.log('no preview available');
 								}
-								scope.$apply();
-								loadHelper();
 							});
-								
-						} else {
-							loadImageCallback(scope.loremFlickr.link, function(response){
-								if(response.msg == "success") {
-									scope.images.push({link: response.image.src, user: null});
-								} else {
-									console.log('image load error...');
-								}
-								scope.$apply();
-								loadHelper();
-							});
-							
 						}
-					}
+						loadImageCallback(tmp.link, function(response){
+							
+							if(response.msg == "success") {
+								tmp.link = response.image.src;
+								scope.images.push(tmp);
+							} else {
+								console.log('image load error...');
+							}
+							scope.$apply();
+							loadHelper();
+						});
+							
+					} 
+					// else {
+					// 	loadImageCallback(scope.loremFlickr.link, function(response){
+					// 		if(response.msg == "success") {
+					// 			scope.images.push({link: response.image.src, user: null});
+					// 		} else {
+					// 			console.log('image load error...');
+					// 		}
+					// 		scope.$apply();
+					// 		loadHelper();
+					// 	});
+						
+					// }
+					// }
 				});
 					
 			};
@@ -85,35 +90,32 @@ angular.module('OsmoApp.directives', [])
 			 *	Using 
 			 *	@params {array} users : array of users with media
 			 */
-			var performInitialFill = function(){
-				// randomly set the images of 100 items
-				var lengthUndisplayed = scope.undisplayedMedia.length;
-				var randomIndex;
-				var delay = 0;
+			// var performInitialFill = function(){
+			// 	// randomly set the images of 100 items
 				
-				loadHelper();
-				// for(var i = 0; i < totalLoad; i++){
-				// 	if(lengthUndisplayed > 0) {
-				// 		$timeout(function(){
-				// 			scope.unloadedImages--;
-				// 			randomIndex = Math.floor(Math.random()*lengthUndisplayed);
-				// 			scope.images.push(scope.undisplayedMedia[randomIndex]);
-				// 			scope.undisplayedMedia.splice(randomIndex, 1);
-				// 		}, delay);
-				// 		lengthUndisplayed--;
+			// 	loadHelper();
+			// 	// for(var i = 0; i < totalLoad; i++){
+			// 	// 	if(lengthUndisplayed > 0) {
+			// 	// 		$timeout(function(){
+			// 	// 			scope.unloadedImages--;
+			// 	// 			randomIndex = Math.floor(Math.random()*lengthUndisplayed);
+			// 	// 			scope.images.push(scope.undisplayedMedia[randomIndex]);
+			// 	// 			scope.undisplayedMedia.splice(randomIndex, 1);
+			// 	// 		}, delay);
+			// 	// 		lengthUndisplayed--;
 							
-				// 	} else {
+			// 	// 	} else {
 
-				// 		$timeout(function(){
-				// 			scope.unloadedImages--;
-				// 			scope.images.push(scope.loremFlickr);
-				// 		},delay);
+			// 	// 		$timeout(function(){
+			// 	// 			scope.unloadedImages--;
+			// 	// 			scope.images.push(scope.loremFlickr);
+			// 	// 		},delay);
 						
-				// 	}
-				// 	delay += 200;
-				// }
+			// 	// 	}
+			// 	// 	delay += 200;
+			// 	// }
 				
-			};
+			// };
 
 
 			/*
@@ -130,26 +132,26 @@ angular.module('OsmoApp.directives', [])
 						if(user.videoUri) {
 							if(!user.vimeoThumbnail) {
 								// the user has a video uploaded but vimeoThumbnail has not been saved
-								(function(index) {
-									return function(){
-										numAwaitingResponse++;
-										cacheUserVimeoThumbnail(user, function(response){
-											if(response.msg == "success"){
-												
-												scope.undisplayedMedia.push({link:response.link, user: user});
-											} else {
-												console.log(response);
-											}
-											numAwaitingResponse--;
-											if(numAwaitingResponse == 0){
-												performInitialFill();
-											}
-											// if this callback is the final response to the last user,
-											//	do a random selection
+								(function(user) {
+									numAwaitingResponse++;
+									cacheUserVimeoThumbnail(user, function(response){
+										if(response.msg == "success"){
 											
-										});
-									};
-								})(i);
+											scope.undisplayedMedia.push({link:response.link, user: user});
+										} else {
+											console.log(response);
+										}
+										numAwaitingResponse--;
+										if(numAwaitingResponse == 0){
+											// performInitialFill();
+											loadHelper();
+										}
+										// if this callback is the final response to the last user,
+										//	do a random selection
+										
+									});
+									
+								})(user);
 								
 							} else {
 								scope.undisplayedMedia.push({link: user.vimeoThumbnail, user: user});
@@ -158,7 +160,8 @@ angular.module('OsmoApp.directives', [])
 						}
 					}
 					if(numAwaitingResponse == 0){
-						performInitialFill();
+						// performInitialFill();
+						loadHelper();
 					}
 				});
 			};
@@ -195,7 +198,7 @@ angular.module('OsmoApp.directives', [])
 
 					}
 
-					if(data.pictures.sizes.length > 0){
+					if(data.pictures && data.pictures.sizes.length > 0){
 						$http({
 							method: "POST",
 							url: "/osmo/db/"+user.userId+"/vimeoThumbnail",
@@ -252,17 +255,20 @@ angular.module('OsmoApp.directives', [])
 			scope.$on('changeCurrentVideo', function(e, videoUri){
 				scope.$apply(function(){
 					scope.currentVideo = null;
-					scope.getVideo(videoUri, function(data){
-						if(data.files[0]){
-							$timeout(function(){
-								scope.currentVideo = data.files[0].link;
-							});
-							
-							
-						} else {
-							console.log('no preview available');
-						}
-					});
+					if(videoUri){
+						scope.getVideo(videoUri, function(data){
+							if(data.files[0]){
+								$timeout(function(){
+									scope.currentVideo = data.files[0].link;
+								});
+								
+								
+							} else {
+								console.log('no preview available');
+							}
+						});
+					}
+					
 				});
 			});
 			/*
@@ -304,10 +310,13 @@ angular.module('OsmoApp.directives', [])
 			
 			layoutAfterRender();
 			scope.$on('layoutAfterRemoval', layoutAfterRender);
+			scope.$on("setFocusIndex", function(e, index){
+				scope.focusIndex = index;
+			});
 		}
 	}
 })
-.directive('packeryItem', function($timeout){
+.directive('packeryItem', function($timeout, $location){
 	return {
 		restrict: 'A',
 		templateUrl: './templates/video-wrapper.html',
@@ -316,10 +325,68 @@ angular.module('OsmoApp.directives', [])
 					mousedown = false,
 					imageLoaders = element[0].getElementsByClassName('image-loader'),
 					topLayer = "front",
-					pauseGetNew = false;
+					pauseGetNew = false,
+					params = $location.search();
 			TweenLite.set(imageLoaders[1], {zIndex: 1});
 			scope.linkOne = scope.image.link;
 
+			/*
+			 * Converts abbreviated location to full location name
+			 * @param {string} locationId : abbreviated location
+			 */
+			scope.fullLocationName = function(locationId) {
+				var locationName = "";
+				switch(locationId){
+					case "SJ":
+						locationName = "San Jose, CA | USA";
+						break;
+					case "SF":
+						locationName = "San Francisco, CA | USA";
+						break;
+					case "TX":
+						locationName = "Richardson, TX | USA";
+						break;
+					case "SEATTLE":
+						locationName = "Seattle, WA | USA";
+						break;
+					case "OREGON":
+						locationName = "Portland, OR | USA";
+						
+						break;
+					case "GALWAY":
+						locationName = "Galway | Ireland";
+						break;
+					case "DUBLIN":
+						locationName = "Dublin | Ireland";
+						break;
+					case "OSLO":
+						locationName = "Oslo | Norway";
+						break;
+					case "SHANGHAI":
+						locationName = "Shanghai | China";
+						break;
+					case "KOREA":
+						locationName = "Seoul | Korea";
+						break;
+					default:
+						locationName = "";
+				}
+				return locationName;
+			};
+			/*
+			 * Pins the user and sets the user's video to the osmo viewport
+			 */
+			var focusUser = function(){
+				if(scope.image.user){
+					scope.$emit('changeCurrentVideo', scope.image.user.videoUri);
+
+				}
+				console.log(scope.image.user);
+				scope.$emit("setFocusIndex", scope.$index);
+				$timeout(function(){
+					scope.pckry.fit(element[0], 0, 0);
+				});
+			}
 			/*
 			 *	Loads image via callback function then fades out layer on top
 			 */
@@ -394,12 +461,7 @@ angular.module('OsmoApp.directives', [])
 					
 				});
 				element.on('click', function(){
-					if(scope.image.user && scope.image.user.videoUri){
-						scope.$emit('changeCurrentVideo', scope.image.user.videoUri);
-
-					}
-					
-					
+					focusUser();
 					
 					
 				});
@@ -429,6 +491,12 @@ angular.module('OsmoApp.directives', [])
 					scope.$emit('layoutAfterRemoval');
 					
 				});
+				if(params.focus && params.focus == scope.image.user.userId){
+					$timeout(function(){
+						focusUser();
+
+					});
+				}
 			};
 
 			try {
@@ -446,7 +514,8 @@ angular.module('OsmoApp.directives', [])
 				var randomDelay = parseInt(Math.random()*20000)+20000;
 				$timeout(function(){
 					// if(scope.unloadedImages == 0){
-					if(!pauseGetNew){
+
+					if(scope.$index != scope.focusIndex){
 						var currentImageInfo = scope.image,
 								length = scope.undisplayedMedia.length;
 						// check if there are undisplayed items that can be swapped out
@@ -455,15 +524,18 @@ angular.module('OsmoApp.directives', [])
 							var imageInfo = scope.undisplayedMedia[randomIndex];
 							setNewLink(imageInfo, getNewImage);
 							scope.undisplayedMedia.splice(randomIndex, 1);
-							
+							if(currentImageInfo.user){
+								// this is a real item (as opposed to filler image)
+								// return this info back to undisplayedMedia
+								scope.undisplayedMedia.push(currentImageInfo);
+							}
 						} else {
-							setNewLink(scope.loremFlickr, getNewImage);
+							// wait for an image to appear
+							getNewImage();
 						}
-						if(currentImageInfo.user){
-							// this is a real item (as opposed to filler image)
-							// return this info back to undisplayedMedia
-							scope.undisplayedMedia.push(currentImageInfo);
-						}
+						
+					} else {
+						getNewImage();
 					}
 					
 						
@@ -739,22 +811,27 @@ angular.module('OsmoApp.directives', [])
 			/*
 			 *	Requests video informations from Vimeo, then sends data to callback
 			 *	After getting the video, it saves the user's video info to scope
+			 *	@param {string} videoUri saved in the form of '/videos/#', need to remove "/videos/"
 			 */
 			scope.getVideo = function(videoUri, callback){
+				
 				if(!videoUri){
 					console.log("videoUri invalid");
 
+				} else {
+					videoUri = videoUri.split("/videos/").join('');
+					$http({
+						method: 'GET',
+						url: "/video/"+videoUri
+					}).then(function(response){
+						
+						
+						callback(response.data);
+					}, function(err){
+						console.log(err);
+					});
 				}
-				$http({
-					method: 'GET',
-					url: "/video"+videoUri
-				}).then(function(response){
-					
-					
-					callback(response.data);
-				}, function(err){
-					console.log(err);
-				});
+				
 			};
 			/*
 			 *	Grab current user data and load video information from vimeo

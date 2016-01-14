@@ -802,11 +802,11 @@ nav img.nav-bar-cam {
 /* line 640, ../sass/main.scss */
 .focus-item {
   position: absolute;
-  background: white;
+  background: black;
   width: 80%;
-  height: 73%;
+  height: 75.1%;
   top: 15%;
-  left: 15%;
+  left: 17%;
   overflow: hidden;
 }
 /* line 649, ../sass/main.scss */
@@ -818,8 +818,13 @@ nav img.nav-bar-cam {
 .focus-item video {
   height: 100%;
 }
+/* line 656, ../sass/main.scss */
+.focus-item i {
+  font-size: 1.2vh;
+  color: rgba(255, 255, 255, 0.8);
+}
 
-/* line 658, ../sass/main.scss */
+/* line 663, ../sass/main.scss */
 #osmo-image {
   -moz-transform: translate(-35%, 10%);
   -ms-transform: translate(-35%, 10%);
@@ -836,7 +841,7 @@ nav img.nav-bar-cam {
   left: 70%;
 }
 
-/* line 670, ../sass/main.scss */
+/* line 675, ../sass/main.scss */
 .unit-reference {
   height: 1px;
   visibility: hidden;
@@ -844,26 +849,32 @@ nav img.nav-bar-cam {
   width: 1vh;
 }
 
-/* line 677, ../sass/main.scss */
+/* line 682, ../sass/main.scss */
 .video-wrappers {
   background-color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
 }
-/* line 680, ../sass/main.scss */
+/* line 686, ../sass/main.scss */
 .video-wrappers.small {
   width: 20vh;
   height: 10vh;
 }
-/* line 685, ../sass/main.scss */
+/* line 691, ../sass/main.scss */
 .video-wrappers.extra-wide {
-  width: 32vh;
+  width: 30vh;
   height: 18vh;
 }
-/* line 691, ../sass/main.scss */
+/* line 697, ../sass/main.scss */
 .video-wrappers.wide {
   width: 16vh;
   height: 12vh;
 }
-/* line 697, ../sass/main.scss */
+/* line 703, ../sass/main.scss */
+.video-wrappers.focus {
+  width: 69vh;
+  height: 35vh;
+}
+/* line 707, ../sass/main.scss */
 .video-wrappers .image-loader {
   position: absolute;
   width: 100%;
@@ -873,28 +884,28 @@ nav img.nav-bar-cam {
   z-index: 2;
 }
 
-/* line 708, ../sass/main.scss */
+/* line 718, ../sass/main.scss */
 .container {
   display: inline-block;
   position: relative;
   flex: 1 1 0;
   overflow: auto;
 }
-/* line 713, ../sass/main.scss */
+/* line 723, ../sass/main.scss */
 .container.upload-method {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
-/* line 716, ../sass/main.scss */
+/* line 726, ../sass/main.scss */
 .container.form-wrapper {
   padding: 30px;
   background-color: white;
 }
-/* line 720, ../sass/main.scss */
+/* line 730, ../sass/main.scss */
 .container.row {
   display: -webkit-flex;
   display: flex;
 }
-/* line 723, ../sass/main.scss */
+/* line 733, ../sass/main.scss */
 .container.mosaic {
   -webkit-flex: 1 1 0;
   flex: 1 1 0;
@@ -905,7 +916,7 @@ nav img.nav-bar-cam {
   height: 100% !important;
 }
 
-/* line 732, ../sass/main.scss */
+/* line 742, ../sass/main.scss */
 .row .upload-method {
   -webkit-flex: 1 1 0;
   flex: 1 1 0;
@@ -913,7 +924,7 @@ nav img.nav-bar-cam {
   flex-direction: column;
 }
 
-/* line 737, ../sass/main.scss */
+/* line 747, ../sass/main.scss */
 .center-children, .focus-item {
   display: -webkit-flex;
   display: flex;
@@ -923,12 +934,49 @@ nav img.nav-bar-cam {
   align-items: center;
 }
 
-/* line 743, ../sass/main.scss */
+/* line 753, ../sass/main.scss */
 .video-preview {
   height: 100px;
 }
 
-/* line 756, ../sass/main.scss */
+/* line 757, ../sass/main.scss */
+.pinned-user {
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+/* line 762, ../sass/main.scss */
+.pinned-user .image-container {
+  height: 100%;
+  width: 35vh;
+  position: relative;
+}
+/* line 766, ../sass/main.scss */
+.pinned-user .image-container div {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+/* line 774, ../sass/main.scss */
+.pinned-user .meta {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex: 1 1 0;
+  flex: 1 1 0;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  color: #ee3923;
+}
+
+/* line 794, ../sass/main.scss */
 .loader-overlay {
   background-color: rgba(0, 0, 0, 0.8);
   width: 100%;
@@ -945,16 +993,16 @@ nav img.nav-bar-cam {
   left: 0;
   visibility: hidden;
 }
-/* line 768, ../sass/main.scss */
+/* line 806, ../sass/main.scss */
 .loader-overlay #loader {
   width: 200px;
 }
-/* line 771, ../sass/main.scss */
+/* line 809, ../sass/main.scss */
 .loader-overlay #draw {
   stroke: #ee3923;
   stroke-width: 30;
 }
-/* line 775, ../sass/main.scss */
+/* line 813, ../sass/main.scss */
 .loader-overlay #outline {
   stroke: #ee3923;
   opacity: 0.1;

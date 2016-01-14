@@ -1,2 +1,13 @@
-<div class="image-loader" ng-style='{"background-image":"url("+linkOne+")"}'></div>
-<div class="image-loader" ng-style="{'background-image':'url('+linkTwo+')'}"></div>
+<div ng-hide="focusIndex == $index">
+	<div class="image-loader" ng-style='{"background-image":"url("+linkOne+")"}'></div>
+	<div class="image-loader" ng-style="{'background-image':'url('+linkTwo+')'}"></div>
+</div>
+<div class="pinned-user" ng-if="focusIndex == $index">
+	<div class="image-container">
+		<div ng-style='{"background-image":"url("+image.user.selfieLocation+")"}'></div>
+	</div>
+	<div class="meta">
+		<h2 class="name">{{image.user.name}}</h3>
+		<h3 class="location">{{fullLocationName(image.user.location)}}</h4>
+	</div>
+</div>

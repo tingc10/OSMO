@@ -4,12 +4,13 @@
 <div class="stamp vertical" stamp></div>
 <div class="stamp arm" stamp></div>
 <div class="stamp video" stamp>
-	<div class="focus-item">
+	<div class="focus-item" ng-click="fullScreen()">
 		<img src="//i.giphy.com/SqP6xkizrTNO8.gif" ng-hide="currentVideo"></img>
-		<video controls ng-if="currentVideo">
+		<i class="icon-fullscreen"></i>
+		<video controls ng-if="currentVideo" autoplay>
 			<source ng-src="{{currentVideo | trustUrl}}" type="video/mp4">
 		</video>
 	</div>
 </div>
-<div class="video-wrappers {{randomSize}}" ng-repeat="image in images track by $index" packery-item></div>
+<div class="video-wrappers {{::randomSize}}" ng-class="{focus: $index == focusIndex}" ng-repeat="image in images track by $index" packery-item></div>
 <div class="unit-reference"></div>

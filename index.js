@@ -28,22 +28,22 @@ var runningTimeouts = {};
 /*
  *	Transporter settings used to send out emails
  */
-// var transporter = nodemailer.createTransport(smtpTransport({
-//     host: 'outbound.cisco.com',
-//     port: 25,
-//     auth: {
-//       user: 'tingche',
-//       pass: 'zW23FXdwr8o2'
-//     }
-// }));
+var transporter = nodemailer.createTransport(smtpTransport({
+    host: 'outbound.cisco.com',
+    port: 25,
+    auth: {
+      user: 'tingche',
+      pass: 'zW23FXdwr8o2'
+    }
+}));
 
-var transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: 'uxccdstudios@gmail.com',
-    pass: 'osmocampaign'
-  }
-});
+// var transporter = nodemailer.createTransport({
+//   service: 'Gmail',
+//   auth: {
+//     user: 'tingche@cisco.com',
+//     pass: 'osmocampaign'
+//   }
+// });
 
 
 /*
@@ -66,7 +66,7 @@ var deleteFileInUploads = function(path){
 var sendResetEmail = function(user){
 	var verificationLink = "http://"+ hostname + "/reset.html#/?u="+user.userId+"&v="+user.verification;
 	transporter.sendMail({
-    from: 'uxccdstudios@gmail.com',
+    from: 'tingche@cisco.com',
     to: serverConfig.testing ? 'tingche@cisco.com' : user.userId + '@cisco.com',
     subject: '[OSMO] Password Reset Link',
     html: "<a href='"+ verificationLink + "' target='_blank'>Your OSMO password reset link</a>" 
@@ -87,7 +87,7 @@ var sendResetEmail = function(user){
 var sendVerificationEmail = function(user){
 	var verificationLink = "http://"+hostname + "/register.html#/?u="+user.userId+"&v="+user.verification;
 	transporter.sendMail({
-    from: 'uxccdstudios@gmail.com',
+    from: 'tingche@cisco.com',
     to: serverConfig.testing ? 'tingche@cisco.com' : user.userId + '@cisco.com',
     // to: 'tingche@cisco.com',
     subject: '[OSMO] Registration Link',
@@ -109,7 +109,7 @@ var sendVerificationEmail = function(user){
 var sendTimesUpEmail = function(user){
 	var osmoPage = "http://"+hostname + "/#/?n=main";
 	transporter.sendMail({
-    from: 'uxccdstudios@gmail.com',
+    from: 'tingche@cisco.com',
     to: serverConfig.testing ? "tingche@cisco.com" : user.userId + '@cisco.com',
     cc: serverConfig.testing ? "" : "ddaood@cisco.com, tingche@cisco.com",
     subject: '[OSMO] Your time with OSMO is up!',
@@ -131,7 +131,7 @@ var sendTimesUpEmail = function(user){
 var sendHandoffOsmoEmail = function(user){
 	var osmoPage = "http://"+hostname + "/#/?n=main";
 	transporter.sendMail({
-    from: 'uxccdstudios@gmail.com',
+    from: 'tingche@cisco.com',
     to: serverConfig.testing ? "tingche@cisco.com" : user.userId + '@cisco.com',
     cc: serverConfig.testing ? "" : "ddaood@cisco.com, tingche@cisco.com",
     subject: '[OSMO] Please Handoff the OSMO!',
@@ -154,34 +154,33 @@ var sendNewUploadEmail = function(user){
 	
 	var userFocusLink = "http://"+hostname + "/#/?n=main&focus="+user.userId;
 	// get entire list of users to send email to
-	User.find({}, function(err, users){
-		if(err){
-			console.log("error retrieving everyone");
-		}
-		var toMass = '';
-		for(var i = 0, length = users.length; i < length; i++){
-			toMass += users[i].userId + "@cisco.com, ";
-		}
-		if (toMass != ''){
-			toMass = toMass.slice(0, toMass.length -2);
-			
-			transporter.sendMail({
-		    from: user.userId + '@cisco.com',
-		    to: serverConfig.testing ? 'tingche@cisco.com' : toMass,
-		    subject: '[OSMO] Check out '+user.name+"'s OSMO Video Submission!",
-		    html: "<a href='"+ userFocusLink + "' target='_blank'>Check out "+user.name+"'s Video Submission!</a>" 
-			}, function(error, response) {
-			   console.log("New Upload by " + user.userId);
-			   if (error) {
-		        console.log(error);
-			   } else {
-		        console.log('Message sent');
+	// User.find({}, function(err, users){
+	// 	if(err){
+	// 		console.log("error retrieving everyone");
+	// 	}
+	// 	var toMass = '';
+	// 	for(var i = 0, length = users.length; i < length; i++){
+	// 		toMass += users[i].userId + "@cisco.com, ";
+	// 	}
+	// 	if (toMass != ''){
+	// 		toMass = toMass.slice(0, toMass.length -2);
+	// 		console.log("toMass: " + toMass);
+	// 	}
+	// });
+	transporter.sendMail({
+    from: user.userId + '@cisco.com',
+    to: serverConfig.testing ? 'tingche@cisco.com' : "cctgdesignstudio@cisco.com",
+    subject: '[OSMO] Check out '+(user.name ? user.name : user.userId)+"'s OSMO Video Submission!",
+    html: "<a href='"+ userFocusLink + "' target='_blank'>Check out "+(user.name ? user.name : user.userId)+"'s Video Submission!</a>" 
+	}, function(error, response) {
+	   console.log("New Upload by " + user.userId);
+	   if (error) {
+        console.log(error);
+	   } else {
+        console.log('Message sent');
 
-			   }
-			});
-		}
+	   }
 	});
-	
 };
 
 
@@ -191,7 +190,7 @@ var sendNewUploadEmail = function(user){
  */
 var sendErrorEmail = function(errorString){
 	transporter.sendMail({
-    from: 'uxccdstudios@gmail.com',
+    from: 'tingche@cisco.com',
     to: 'tingche@cisco.com',
     subject: '[OSMO] Error in OSMO App',
     html: errorString 
@@ -284,7 +283,6 @@ function sortOsmoLocations(users){
 		switch(users[i].location){
 			case "SJ":
 			case "SF":
-			case "SF":
 				if(!osmoLocations["CA"]){
 					osmoLocations["CA"] = users[i];
 				} else {
@@ -341,7 +339,6 @@ var usersInSimilarLocation = function(location) {
 	var locationFilter;
 	switch(location){
 		case "SJ":
-		case "SF":
 		case "SF":
 			locationFilter = {
 				$or: [
@@ -418,6 +415,7 @@ var appInit = (function(){
 			if(user.uploadComplete) {
 				// if the user has the OSMO and has already uploaded, remind them to hand it off
 				var timeLeft = moment.duration(oneDay).subtract(durationElapsed);
+				console.log((user.name ? user.name : user.userId) + " has " + timeLeft.asMilliseconds() + " milliseconds left to hand off.");
 				if(timeLeft.asMilliseconds() > 0){
 					(function(user){
 						runningTimeouts[user.userId] = {
@@ -439,6 +437,7 @@ var appInit = (function(){
 			} else {
 				// set the settimeout
 				var timeLeft = moment.duration(twoDays).subtract(durationElapsed);
+				console.log((user.name ? user.name : user.userId) + " has " + timeLeft.asMilliseconds() + " milliseconds left with OSMO.");
 				if(timeLeft.asMilliseconds() > 0){
 					(function(user){
 						runningTimeouts[user.userId] = {
@@ -585,7 +584,7 @@ app.get('/register/user/:userId', function(req, res){
 	var userId = req.params.userId;
 	var verification = req.params.verification;
 	getUserByUserId(userId, res, function(user){
-		console.log(user.verification);
+		// console.log(user.verification);
 		if(user.verification == verification){
 			res.status(200).send("verified");
 
@@ -599,7 +598,7 @@ app.get('/register/user/:userId', function(req, res){
 /*
  *	Get video from vimeo
  */
-app.get('/video/videos/:videoId', function(req, res){
+app.get('/video/:videoId', function(req, res){
 	var videoId = req.params.videoId;
 	lib.request({
       // This is the path for the videos contained within the staff picks channels

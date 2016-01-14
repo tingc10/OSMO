@@ -6,11 +6,11 @@
 		<label for="cisco-id">
 			<h2>Username</h2>
 		</label>
-		<input type="text" name="cisco-id" ng-model="userId" />
+		<input type="text" name="cisco-id" ng-model="userId" placeholder="Cisco ID"/>
 		<label for="password" ng-hide="showForgetPassword">
 			<h2>Password</h2>
 		</label>
-		<input type="password" name="password" ng-model="password" ng-keyup="monitorSubmission($event)" ng-hide="showForgetPassword" />
+		<input type="password" name="password" ng-model="password" ng-keyup="monitorSubmission($event)" ng-hide="showForgetPassword" placeholder="5UP3R 53CR3T"/>
 		<div class="forgot-password" ng-click="showForgetPassword = true" ng-hide="showForgetPassword">Forgot Password</div>
 		<h4>{{loginResponse}}</h4>
 		<button ng-click="showForgetPassword ? resetPassword() : login()">{{showForgetPassword ? "Reset Password" : "Login"}}</button>
