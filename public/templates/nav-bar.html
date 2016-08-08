@@ -7,7 +7,7 @@
 	<i class="icon-sign-in"></i> Login
 </div>
 <div class="nav-option" ng-class="{selected:currentPage == 'dashboard'}" ng-click="navigate('dashboard')" ng-if="loggedIn">
-	<i class="icon-contact"></i> {{currentUser.name}}
+	<i class="icon-contact"></i> {{$root.userLoggedIn.name}}
 </div>
 <div class="nav-option" ng-class="{selected:currentPage == 'guidelines'}" ng-click="navigate('guidelines')">
 	<i class="icon-info-outline"></i> Guidelines

@@ -18,9 +18,25 @@
 <script type="text/javascript" src="./js/controllers.js"></script>
 <script type="text/javascript" src="./js/app.js"></script>
 </head>
-<body ng-app="OsmoApp">
+<body ng-app="OsmoApp" ng-controller="MainController">
 	<nav nav-bar></nav>
+
+
+	<div class="toggle-view" ng-if="currentPage === 'main' || currentPage === 'all-users'" toggle-views>
+		<div class="nav-container" ng-show="currentPage === 'main'" ng-click="navigate('all-users')">
+			<i class="icon-list-view"></i>
+			<h4>List View</h4>
+		</div>
+		<div class="nav-container" ng-click="navigate('main')" ng-show="currentPage === 'all-users'">
+			<i class="icon-layout"></i>
+			<h4>Mosaic View</h4>
+		</div>
+	</div>
+
 	<div class="container mosaic" mosaic ng-if="currentPage=='main'"></div>
+	<div class="container list-view" all-users-view ng-if="currentPage=='all-users'"></div>
+
+
 	<div class="login-panel" login-panel></div>
 	<div class="container dashboard center-children" dashboard ng-if="currentPage=='dashboard'"></div>
 	<div class="container guidelines" guidelines ng-if="currentPage == 'guidelines'"></div>

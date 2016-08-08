@@ -17,6 +17,7 @@ angular.module('OsmoApp.directives', [])
 			var osmoImage = element[0].getElementsByClassName('osmo-image')[0];
 			var osmoHeight;
 			var params = $location.search();
+			
 			/*
 			 * Triggers packery after DOM is rendered
 			 */
@@ -69,65 +70,83 @@ angular.module('OsmoApp.directives', [])
 						});
 							
 					} 
-					// else {
-					// 	loadImageCallback(scope.loremFlickr.link, function(response){
-					// 		if(response.msg == "success") {
-					// 			scope.images.push({link: response.image.src, user: null});
-					// 		} else {
-					// 			console.log('image load error...');
-					// 		}
-					// 		scope.$apply();
-					// 		loadHelper();
-					// 	});
-						
-					// }
-					// }
+					
 				});
 					
 			};
 
 			/*
-			 *	Using 
-			 *	@params {array} users : array of users with media
+			 * Enter fullscreen mode after clicking on video
 			 */
-			// var performInitialFill = function(){
-			// 	// randomly set the images of 100 items
+			scope.fullScreen = function() {
 				
-			// 	loadHelper();
-			// 	// for(var i = 0; i < totalLoad; i++){
-			// 	// 	if(lengthUndisplayed > 0) {
-			// 	// 		$timeout(function(){
-			// 	// 			scope.unloadedImages--;
-			// 	// 			randomIndex = Math.floor(Math.random()*lengthUndisplayed);
-			// 	// 			scope.images.push(scope.undisplayedMedia[randomIndex]);
-			// 	// 			scope.undisplayedMedia.splice(randomIndex, 1);
-			// 	// 		}, delay);
-			// 	// 		lengthUndisplayed--;
-							
-			// 	// 	} else {
+				var videoElt = element.find('video')[0];
 
-			// 	// 		$timeout(function(){
-			// 	// 			scope.unloadedImages--;
-			// 	// 			scope.images.push(scope.loremFlickr);
-			// 	// 		},delay);
-						
-			// 	// 	}
-			// 	// 	delay += 200;
-			// 	// }
-				
-			// };
-
+			  if(scope.currentVideo){
+			  	if (videoElt.mozRequestFullScreen) {
+				    videoElt.mozRequestFullScreen();
+				  } else if (videoElt.webkitRequestFullScreen) {
+				    videoElt.webkitRequestFullScreen();
+				  } 
+			  }
+			   
+			}
 
 			/*
-			 *	Gets all the possible media that can be displayed
+			 * Get all users who have the Osmo at each location
+			 * @params {function} callback : takes a parameter users who have OSMO
 			 */
-			var getAllPhotoMedia = function(){
+			var getAllUsersWithOsmo = function(callback) {
+				$http({
+					method: "GET",
+					url: "/osmo/db/users/hasOSMO"
+				}).then(function(response){
+					
+					callback(response.data.users);
+				}, function(err){
+					console.log("Could not get users", err);
+				});
+			};
+			
+			/*
+			 * Generates a string of the status of the location
+			 * @param {obj} location : the location object containing all necessary info
+			 */
+			scope.legibleStatus = function(location){
+				if(location.handoffTo) {
+					return location.userId + " selected " + location.handoffTo;
+				} else {
+					return location.userId;
+				}
+			};
+
+			/*
+			 * Updates the information regarding all the OSMO locations
+			 * @params {obj} locations : locations with information about who has the Osmo
+			 */
+			var updateOsmoLocations = function(locations){
+				for(var location in locations){
+					locations[location].name = location;
+				}
+				scope.osmoLocations = locations;
+			};
+
+			/*
+			 *	Gets all the possible media that can be displayed and cache video element
+			 */
+			var initializeAfterRender = function(){
+				getAllUsersWithOsmo(function(locations){
+					$timeout(function(){
+						updateOsmoLocations(locations);
+					});
+				});
+
 				getAllUsersWithMedia(function(response){
-					var users = response.data;
-					console.log(users);
-					scope.allUsersWithMedia = users;
-					for(var i = 0, length = users.length; i < length; i++) {
-						var user = users[i];
+					scope.allUsersWithMedia = response.data;
+					
+					console.log(scope.allUsersWithMedia);
+					for(var i = 0, length = scope.allUsersWithMedia.length; i < length; i++) {
+						var user = scope.allUsersWithMedia[i];
 						scope.undisplayedMedia.push({link:user.selfieLocation, user: user});
 						if(user.videoUri) {
 							if(!user.vimeoThumbnail) {
@@ -165,6 +184,8 @@ angular.module('OsmoApp.directives', [])
 					}
 				});
 			};
+
+
 
 			/*
 			 *	Get all users from database and sends it to callback function
@@ -274,7 +295,7 @@ angular.module('OsmoApp.directives', [])
 			/*
 			 *	Initializer
 			 */
-			$timeout(getAllPhotoMedia);
+			$timeout(initializeAfterRender);
 			
 			/* 
 				INIT PACKERY AND LISTENERS
@@ -330,49 +351,7 @@ angular.module('OsmoApp.directives', [])
 			TweenLite.set(imageLoaders[1], {zIndex: 1});
 			scope.linkOne = scope.image.link;
 
-			/*
-			 * Converts abbreviated location to full location name
-			 * @param {string} locationId : abbreviated location
-			 */
-			scope.fullLocationName = function(locationId) {
-				var locationName = "";
-				switch(locationId){
-					case "SJ":
-						locationName = "San Jose, CA | USA";
-						break;
-					case "SF":
-						locationName = "San Francisco, CA | USA";
-						break;
-					case "TX":
-						locationName = "Richardson, TX | USA";
-						break;
-					case "SEATTLE":
-						locationName = "Seattle, WA | USA";
-						break;
-					case "OREGON":
-						locationName = "Portland, OR | USA";
-						
-						break;
-					case "GALWAY":
-						locationName = "Galway | Ireland";
-						break;
-					case "DUBLIN":
-						locationName = "Dublin | Ireland";
-						break;
-					case "OSLO":
-						locationName = "Oslo | Norway";
-						break;
-					case "SHANGHAI":
-						locationName = "Shanghai | China";
-						break;
-					case "KOREA":
-						locationName = "Seoul | Korea";
-						break;
-					default:
-						locationName = "";
-				}
-				return locationName;
-			};
+			
 			/*
 			 * Pins the user and sets the user's video to the osmo viewport
 			 */
@@ -548,11 +527,12 @@ angular.module('OsmoApp.directives', [])
 		}
 	}
 })
-.directive('loginPanel', function($http, $timeout){
+.directive('loginPanel', function($location, $http, $timeout){
 	return {
 		restrict: "A",
 		templateUrl: './templates/login-panel.html',
 		link: function(scope, element, attrs) {
+			var params = $location.search();
 			/**
 			 *	Make registration response hide
 			 */
@@ -625,8 +605,12 @@ angular.module('OsmoApp.directives', [])
 
 
 						scope.toggleLogin(false);
+						if(params.n === "all-users") {
+							scope.navigate("all-users");
+						} else {
+							scope.navigate("dashboard");
+						}
 						
-						scope.navigate("dashboard");
 						$timeout(function(){
 							scope.userInit(response);
 						});
@@ -711,6 +695,7 @@ angular.module('OsmoApp.directives', [])
 							$window.location.href = '/dashboard'
 						}
 					}, function(err){
+
 						console.log("Something went wrong :" + err);
 					});
 				} else {
@@ -779,10 +764,9 @@ angular.module('OsmoApp.directives', [])
 		restrict: 'A',
 		templateUrl: './templates/nav-bar.html',
 		link: function(scope, element, attrs) {
-			
 			var params = $location.search();
 			scope.currentPage = 'main';
-			scope.loggedIn = false;
+			
 			scope.userVideoData;
 			scope.userVideoUrl;
 			/*
@@ -792,10 +776,13 @@ angular.module('OsmoApp.directives', [])
 			scope.userInit = function(response){
 
 				scope.loggedIn = true;
-				scope.currentUser = response.data.user;
+				$rootScope.userLoggedIn = response.data.user;
+				if(!$rootScope.userLoggedIn.name) {
+					$rootScope.userLoggedIn.name = '';
+				}
 				$rootScope.$emit('updateCurrentUser', response.data.user);
-				if(scope.currentUser.videoUri){
-					scope.getVideo(scope.currentUser.videoUri, function(data){
+				if($rootScope.userLoggedIn.videoUri){
+					scope.getVideo($rootScope.userLoggedIn.videoUri, function(data){
 						if(data.files && data.files[0]){
 							scope.userVideoUrl = data.files[0].link;
 							scope.videoPreviewInfo = "Your Video Submission";
@@ -922,6 +909,8 @@ angular.module('OsmoApp.directives', [])
 				});
 				
 			}
+
+
 		}
 	}
 })
@@ -968,6 +957,7 @@ angular.module('OsmoApp.directives', [])
 		templateUrl: "./templates/dashboard.html",
 		link: function(scope, element, attrs) {
 			var cacheReminder = element[0].getElementsByClassName('upload-reminder')[0];
+			var deregisterRootscope = [];
 			scope.showSubmission = false;
 			scope.requireHandoff = false;
 			scope.showVideoSubmission = false;
@@ -975,6 +965,7 @@ angular.module('OsmoApp.directives', [])
 			scope.releaseNinja = false;
 			scope.showCountdown = false;
 			scope.showTurnInfo = false;
+			scope.editName = false;
 			/*
 			 *	Method that runs after you upload a photo
 			 *	For more information about parameters, check out the angular-file-upload API
@@ -1009,22 +1000,47 @@ angular.module('OsmoApp.directives', [])
 			
 				
 			};
+
+			/*
+			 * Confirm Name Change and update server
+			 */
+			scope.confirmNameChange = function() {
+				if($rootScope.userLoggedIn.name == "") {
+					alert("Please enter a name!");
+					return;
+				}
+				$http({
+					method: "PUT",
+					url: "/osmo/db/users/name",
+					data: {
+						name : $rootScope.userLoggedIn.name
+					}
+				}).then(function(response){
+					console.log(response);
+					if(response.data == "success"){
+						scope.editName = false;
+					}
+				}, function(err){
+					console.log("Something went wrong :" + err);
+				});
+			};
+
 			/*
 			 *	Sends the uploaded profile picture to the server
 			 */
 			scope.uploadSelfie = function(){
 				scope.$emit('toggleLoader', true);
 				Upload.upload({
-				  url: '/uploads/'+scope.currentUser.userId+'/selfie',
+				  url: '/uploads/'+$rootScope.userLoggedIn.userId+'/selfie',
 				  method: 'POST',
 				  data: {
-				  	userId : scope.currentUser.userId,
+				  	userId : $rootScope.userLoggedIn.userId,
 				  },
 				  file: scope.selfiePreview
 				}).then(function (resp) {
 					scope.showSubmission = false;
           console.log('Success. Response: ', resp.data);
-          scope.currentUser.selfieLocation = resp.data.fileLocation;
+          $rootScope.userLoggedIn.selfieLocation = resp.data.fileLocation;
 					TweenMax.to(cacheReminder, 0.4, {autoAlpha: 0, padding: 0, height: 0, ease: Power2.easeOut});
 					scope.$emit('toggleLoader', false);
           scope.$emit('showNetworkResponse', "Upload Success");
@@ -1060,7 +1076,7 @@ angular.module('OsmoApp.directives', [])
 					}).then(function(response){
 						console.log(response);
 						scope.requireHandoff = false;
-						scope.confirmOsmo = {sender: scope.currentUser.userId, recipient: scope.selectedCandidate};
+						scope.confirmOsmo = {sender: $rootScope.userLoggedIn.userId, recipient: scope.selectedCandidate};
 						scope.osmoHandoffMessage = "I have handed off the OSMO device to " + scope.selectedCandidate;
 						scope.$emit('showNetworkResponse', scope.selectedCandidate + " has been selected as the next OSMO Candidate");
 
@@ -1108,57 +1124,63 @@ angular.module('OsmoApp.directives', [])
 			$timeout(function(){
 				scope.getCurrentUser();
 			});
-			$rootScope.$on('updateCurrentUser',function(e, user){
-				console.log("watch fired!");
-				if(user){
-					console.log("Refreshed user object");
-					if(user.hasOSMO) {
-						if(!user.videoUri) {
-							scope.showVideoSubmission = true;
+			deregisterRootscope.push(
+				$rootScope.$on('updateCurrentUser',function(e, user){
+					console.log("watch fired!");
+					if(user){
+						console.log("Refreshed user object");
+						if(user.hasOSMO) {
+							if(!user.videoUri) {
+								scope.showVideoSubmission = true;
+							}
+							console.log("showing countdown!");
+							scope.showCountdown = true;
+							startClock(user);
+							if(user.handoffTo){
+								// user has the osmo and needs to confirm handing off to other user
+								scope.confirmOsmo = {sender: user.userId, recipient: user.handoffTo};
+								scope.osmoHandoffMessage = "I have handed off the OSMO device to " + user.handoffTo;
+							}
+							// scope.timeLeft = Math.abs(new Date() - user.timeStart)
+						} else {
+							if(user.referer && !user.uploadComplete) {
+								scope.confirmOsmo = {sender: user.referer, recipient: user.userId};
+								scope.osmoHandoffMessage = "I have received the OSMO";
+							}
 						}
-						console.log("showing countdown!");
-						scope.showCountdown = true;
-						startClock(user);
-						if(user.handoffTo){
-							// user has the osmo and needs to confirm handing off to other user
-							scope.confirmOsmo = {sender: user.userId, recipient: user.handoffTo};
-							scope.osmoHandoffMessage = "I have handed off the OSMO device to " + user.handoffTo;
+						if(!user.referer && !user.videoUri && !user.hasOSMO) {
+							scope.showTurnInfo = true;
+						} else {
+							scope.showTurnInfo = false;
 						}
-						// scope.timeLeft = Math.abs(new Date() - user.timeStart)
-					} else {
-						if(user.referer && !user.uploadComplete) {
-							scope.confirmOsmo = {sender: user.referer, recipient: user.userId};
-							scope.osmoHandoffMessage = "I have received the OSMO";
+						if(!user.selfieLocation) {
+							TweenMax.to(cacheReminder, 0.4, {autoAlpha: 1, padding: 20, height: 'initial'});
 						}
-					}
-					if(!user.referer && !user.videoUri && !user.hasOSMO) {
-						scope.showTurnInfo = true;
-					} else {
-						scope.showTurnInfo = false;
-					}
-					if(!user.selfieLocation) {
-						TweenMax.to(cacheReminder, 0.4, {autoAlpha: 1, padding: 20, height: 'initial'});
-					}
 
-					if(user.uploadComplete && !user.handoffTo){
-						// user has uploaded but has not handed off to anyone
-						$http({
-							method: "GET",
-							url: "/osmo/db/users/hasnotupload"
-						}).then(function(response){
-							var users = response.data.users;
-							scope.requireHandoff = true;
-							scope.handoffCandidates = users;
-						}, function(err){
-							console.log('could not get users who have not uploaded');
-						});
+						if(user.uploadComplete && !user.handoffTo){
+							// user has uploaded but has not handed off to anyone
+							$http({
+								method: "GET",
+								url: "/osmo/db/users/hasnotupload"
+							}).then(function(response){
+								var users = response.data.users;
+								scope.requireHandoff = true;
+								scope.handoffCandidates = users;
+							}, function(err){
+								console.log('could not get users who have not uploaded');
+							});
+						}
+					} else {
+						console.log("Have not gotten user object yet...", user);
 					}
-				} else {
-					console.log("Have not gotten user object yet...", user);
+					
+				})
+			);
+			scope.$on("$destroy", function(){
+				for(var i = 0, length = deregisterRootscope.length; i < length; i ++){
+					deregisterRootscope[i]();
 				}
-				
 			});
-			
 		}
 
 	}
@@ -1232,5 +1254,270 @@ angular.module('OsmoApp.directives', [])
 				});
 			});
 		}
+	}
+})
+.directive('allUsersView', function($http, $rootScope, $timeout){
+	return {
+		restrict: "A",
+		templateUrl: './templates/all-users.html',
+		link: function(scope, element, attrs) {
+			scope.selectedUser = null;
+			scope.currentVideo = null;
+			// scope.ballotsLeft = null;
+			scope.voteMessage = "Cast Vote";
+			scope.currentAward = {};
+			scope.awards = ["Best of Show","Most Creative", "Best Editing", "Best Soundtrack", "Funniest Video"];
+			var deregisterRootscope = [];
+			/**
+			 * Change the current display video
+			 */
+			function changeCurrentVideo() {
+				var videoUri = scope.selectedUser.videoUri;
+				scope.currentVideo = null;
+				if(videoUri){
+					scope.getVideo(videoUri, function(data){
+						if(data.files[0]){
+							$timeout(function(){
+								scope.currentVideo = data.files[0].link;
+							});
+							
+						} else {
+							console.log('no preview available');
+						}
+					});
+				}
+			};
+			function updateVotes(userId, awardIndex, action) {
+				var update = function(){
+					$http({
+						method: "PUT",
+						url: "/osmo/db/users/votes",
+						data: {
+							votes : $rootScope.userLoggedIn.votes
+						}
+					}).then(function(response){
+						console.log(response);
+						if(response.data == "success"){
+							// changeVoteMessage();
+							// updateBallotMessage();
+							scope.$broadcast("updateMyVotes");
+							console.log('success');
+						}
+
+					}, function(err){
+						scope.logout();
+						console.log("Something went wrong :" + err);
+					});
+				};
+
+				var userVotes = $rootScope.userLoggedIn.votes;
+				if(awardIndex == undefined || awardIndex == null) return;
+
+				while(userVotes.length < scope.awards.length) {
+					userVotes.push(undefined);
+				}
+
+				switch(action) {
+					case "add":
+						userVotes[awardIndex] = userId;
+						break;
+					case "remove":
+						userVotes[awardIndex] = undefined;
+						break;
+					default:
+						return;
+				};
+				update();
+					
+			};
+			/**
+			 * Updates the text that describes how many votes you have left
+			 */
+			// function updateBallotMessage() {
+			// 	var numVotes = $rootScope.userLoggedIn.votes.length;
+			// 	if(numVotes < 3){
+			// 		scope.ballotsLeft = "You have " + (3 - numVotes) + " votes left to cast";
+			// 	} else {
+			// 		scope.ballotsLeft = null;
+			// 	}
+			// }
+
+
+			/**
+			 * Changes the text that appears in the button
+			 */
+			// function changeVoteMessage() {
+			// 	var userVotes = $rootScope.userLoggedIn.votes;
+			// 	// console.log($rootScope.userLoggedIn);
+			// 	if(!scope.selectedUser) {
+			// 		return;
+			// 	}
+			// 	if(userVotes.contains(scope.selectedUser.userId)) {
+			// 		scope.voteMessage = "Remove from Votes";
+			// 	} else {
+			// 		scope.voteMessage = "Cast Vote";					
+			// 	}
+			// };
+			
+			
+			
+			/**
+			 * Grabs all known users on database
+			 */
+			function getAllUsers(){
+				$http({
+					method: "GET",
+					url: "/osmo/db/users/all"
+				}).then(function(response){
+					$rootScope.$emit('allUsersRetrieved');
+					$rootScope.allUsers = response.data.sort(function(a, b){
+						var aName = a.name ? a.name : a.userId;
+						var bName = b.name ? b.name : b.userId;
+						if (aName > bName) {
+					    return 1;
+					  }
+					  if (aName < bName) {
+					    return -1;
+					  }
+					  // a must be equal to b
+					  return 0;
+					});
+					
+				}, function(err){
+					console.log('could not get all users');
+				});
+			}
+
+			/*
+			 * Pins the user and sets the user's video to the osmo viewport
+			 */
+			scope.focusUser = function(user){
+				scope.selectedUser = user;
+				changeCurrentVideo();
+				// changeVoteMessage();
+
+			}
+
+
+			scope.voteAction = function(){
+				updateVotes(scope.selectedUser.userId, scope.currentAward.index, "add");
+				// if(scope.voteMessage === "Remove from Votes") {
+				// 	updateVotes(scope.selectedUser.userId, "remove");
+				// } else if(scope.voteMessage === "Add to Votes"){
+				// 	updateVotes(scope.selectedUser.userId, "add");
+				// }
+			};
+			scope.$on("removeVote", function(e, awardIndex){
+				updateVotes(null, awardIndex, "remove");
+			});
+			scope.$on("$destroy", function(){
+				for(var i = 0, length = deregisterRootscope.length; i < length; i ++){
+					deregisterRootscope[i]();
+				}
+			});
+
+
+			/**
+			 * INITIALIZATION
+			 */
+			if(!$rootScope.allUsers) {
+				getAllUsers();
+			}
+
+			// if($rootScope.userLoggedIn) {
+			// 	// updateBallotMessage();
+			// } else {
+			if($rootScope.userLoggedIn){
+				scope.userVotes = $rootScope.userLoggedIn.votes;
+			} else {
+				deregisterRootscope.push(
+					$rootScope.$on('updateCurrentUser', function(e, userLoggedIn){
+						scope.userVotes = $rootScope.userLoggedIn.votes;
+					})
+				);
+			}
+			
+			// }
+
+			
+		}
+	}
+})
+.directive('userListItem', function(){
+	return {
+		restrict: 'A',
+		templateUrl: "./templates/user-list-item.html",
+		link: function(scope, element, attrs){
+			
+		}
+	}
+})
+.directive('votedUser', function($rootScope, $timeout){
+	return {
+		restrict: 'A',
+		templateUrl: "./templates/voted-user.html",
+		link: function(scope, element, attrs) {
+			var deregisterRootscope = [];
+			var userId;
+			scope.userInfo;
+			function getUserInfo() {
+				if(!userId) return;
+
+				for(var i = 0, length = $rootScope.allUsers.length; i < length; i ++){
+					if($rootScope.allUsers[i].userId === userId){
+						// console.log($rootScope.allUsers[i]);
+						scope.userInfo = $rootScope.allUsers[i];
+						return;
+					}
+				}
+			};
+			function updateMyVotes() {
+				scope.userInfo = null;
+				userId = scope.userVotes[scope.$index];
+				getUserInfo();
+			};
+			scope.removeVote = function(){
+				scope.$emit("removeVote", scope.$index);
+			};
+
+			scope.$on("$destroy", function(){
+				for(var i = 0, length = deregisterRootscope.length; i < length; i ++){
+					deregisterRootscope[i]();
+				}
+			});
+
+			if($rootScope.allUsers) {
+				getUserInfo();
+			} else {
+				deregisterRootscope.push(
+					$rootScope.$on('allUsersRetrieved', function(){
+						$timeout(function(){
+							getUserInfo();
+
+						});
+					})
+				);
+			}
+			scope.$watch(function(){
+				return scope.userVotes;
+			}, function(){
+				updateMyVotes();
+				// console.log(userId);
+			}, false);
+
+			scope.$on("updateMyVotes", function(){
+				updateMyVotes();
+			});
+			// if(!$rootScope.userLoggedIn) {
+			// 	deregisterRootscope.push(
+			// 		$rootScope.$on('updateCurrentUser', function(e, userLoggedIn){
+			// 			scope.userVotes = $rootScope.userLoggedIn.votes;
+			// 		})
+			// 	);
+			// } else {
+			// 	scope.userVotes = $rootScope.userLoggedIn.votes;
+			// }
+			
+		} 
 	}
 });

@@ -1,6 +1,7 @@
 @import "compass/css3";
 @import "./../Cisco_Fonts/CiscoSans";
 
+// $green: #7CD47C;
 $redOrange: #ee3923;
 $lightGreen: #d4ecd4;
 $lightOrange: #fdd5d3;
@@ -10,6 +11,7 @@ $defaultUnitSize: 1vh;
 $green: #43a943;
 $red: #d03d35;
 $orange:#f5a623;
+$blackBg : rgba(0,0,0,0.8);
 * {
 	outline: none;
 }
@@ -20,6 +22,7 @@ h1, h2, h3 {
 
 h4, h5, h6 {
 	font-weight: 300;
+	margin: 5px 0;
 }
 
 input {
@@ -46,6 +49,14 @@ input {
   &:focus {
   	outline: none;
   }
+}
+
+select {
+  margin: 0 10px;
+  background-color: white;
+  width: 200px;
+  font-size: 1rem;
+  height: 38px;
 }
 
 html, body {
@@ -103,6 +114,16 @@ nav {
   }
 }
 
+.center-children {
+	@include display-flex;
+	@include justify-content(center);
+	@include align-items(center);
+}
+
+
+
+
+
 
 
 
@@ -158,6 +179,7 @@ nav {
 
 
 .dashboard.container {
+	@include display-flex;
 	@include align-items(flex-start);
 	width: 100%;
 	section {
@@ -226,7 +248,7 @@ nav {
 	left: 0;
 	top: 0;
 	text-transform: uppercase;
-	background-color: rgba(0, 0, 0, 0.8);
+	background-color: $blackBg;
 	&:hover {
 		opacity: 1;
 	}
@@ -376,6 +398,28 @@ nav {
 	}
 }
 
+.name {
+	@extend .center-children;
+	i {
+		cursor: pointer;
+		font-size: 1.2rem;
+		margin-left: 10px;
+	}
+}
+
+.edit-name-container {
+	input {
+		width: 55%;
+		background: transparent;
+	  border-bottom: 1px solid white;
+	  color: white;
+	}
+	i {
+		color: $green;
+		cursor: pointer;
+	}
+}
+
 .turn-info {
 	padding: 20px;
   margin-bottom: 10px;
@@ -520,7 +564,7 @@ nav {
 	  padding: 10px;
 	  font-size: 1.5rem;
 	  cursor: pointer;
-	  color: rgba(0, 0, 0, 0.8);
+	  color: $blackBg;
 	  &:hover {
 	  	color: black;
 	  }
@@ -560,7 +604,7 @@ nav {
 	  padding: 10px;
 	  font-size: 1.5rem;
 	  cursor: pointer;
-	  color: rgba(0, 0, 0, 0.8);
+	  color: $blackBg;
 	  &:hover {
 	  	color: black;
 	  }
@@ -646,6 +690,7 @@ nav {
   top: 15%;
   left: 17%;
   overflow: hidden;
+  cursor: pointer;
   img {
   	object-fit: cover;
   	width: 100%;
@@ -654,9 +699,20 @@ nav {
   	height: 100%;
   }
   i {
-  	font-size: 1.2vh;
-  	color: rgba(255, 255, 255, 0.8);
+  	@include transform(translate(-50%, -50%));
+  	@include transition(color 0.2s);
+  	
+  	font-size: 7vh;
+	  color: rgba(255, 255, 255, 0.3);
+	  position: absolute;
+	  left: 50%;
+	  top: 50%;
 
+  }
+  &:hover {
+  	i {
+  		color: white;
+  	}
   }
 }
 
@@ -680,7 +736,7 @@ nav {
 }
 
 .video-wrappers {
-	background-color: rgba(0, 0, 0, 0.8);
+	background-color: $blackBg;
 	cursor: pointer;
   // float: left;
   &.small {
@@ -744,11 +800,7 @@ nav {
 	@include flex-direction(column);
 }
 
-.center-children {
-	@include display-flex;
-	@include justify-content(center);
-	@include align-items(center);
-}
+
 
 .video-preview {
 	height: 100px;
@@ -781,6 +833,32 @@ nav {
 	}
 }
 
+.osmo-locations {
+  @include display-flex;
+  position: absolute;
+  background-color: $blackBg;
+  bottom: 0;
+  width: 100%;
+  z-index: 5;
+  color: white;
+}
+
+.location-container {
+	@include flex(1 1 0);
+	text-align: center;
+
+	.user-status {
+		margin: 5px;
+		color: $redOrange;
+	}
+	&:not(:first-child) {
+		border-left: 1px solid $redOrange;
+	}
+	.location-name {
+		margin: 5px 0;
+	}
+}
+
 
 
 
@@ -792,7 +870,7 @@ nav {
 
 $strokeWidth: 30;
 .loader-overlay {
-	background-color: rgba(0, 0, 0, 0.8);
+	background-color: $blackBg;
 	width: 100%;
 	height: 100%;
 	@include display-flex;
@@ -814,5 +892,214 @@ $strokeWidth: 30;
 		stroke: #ee3923;
 		opacity: 0.1;
 		stroke-width: $strokeWidth;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+.toggle-view {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  display: inline-block;
+  z-index: 3;
+  background-color: $blackBg;
+  color: white;
+  width: 150px;
+  h4 {
+  	margin: 10px;
+  }
+}
+.nav-container {
+	@extend .center-children;
+	cursor: pointer;
+}
+
+
+
+
+
+
+.list-view {
+	@include display-flex;
+	@include flex-direction(column);
+	height: 100%;
+}
+.users-list-container {
+	@include display-flex;
+	@include flex(1 1 0);
+	// height: 100%;
+	overflow: hidden;
+
+	h1 {
+		color: white;
+		text-align: center;
+	}
+}
+.users-container {
+	@include flex(1 1 200px);
+	// height: 100%;
+
+	overflow: auto;
+}
+.user-container {
+  @include display-flex;
+  @include align-items(center);
+  @include transition(background-color 0.2s ease-out, color 0.2s ease-out);
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  h4 {
+  	margin: 10px;
+  }
+  i {
+  	@extend .center-children;
+	  position: absolute;
+	  right: 0;
+	  top: 0;
+	  height: 100%;
+	  margin: 0 10px;
+  }
+  &:hover {
+  	background-color: $blackBg;
+  	color: white;
+  }
+}
+.video-container {
+	@include flex(6 0 200px);
+	@include display-flex;
+  // @include justify-content(center);
+  @include align-items(center);
+  @include flex-direction(column);
+  @include box-sizing(border-box);
+  padding: 30px;
+  overflow: auto;
+  * {
+  	max-width: 900px;
+
+  }
+	video {
+		@include box-sizing(border-box);
+	  width: 100%;
+	  height: 100%;
+	  padding: 10px 0;
+	}
+}
+.profile-preview {
+  display: inline-block;
+  min-width: 50px;
+  min-height: 50px;
+  margin: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+.current-user-info {
+	@include display-flex;
+	@include align-items(center);
+	@include box-sizing(border-box);
+	@include flex(0 0 120px);
+	width: 100%;
+	color: white;
+  padding: 10px 0;
+  position: relative;
+  .image-container {
+  	width: 120px;
+  	height: 120px;
+  	display: inline-block;
+  	margin-right: 10px;
+  	background-size: cover;
+  	background-position: center;
+
+  }
+	.meta {
+		@include flex-direction(column);
+	}
+}
+
+
+
+
+.voting-container {
+	// @include flex(1 0 285px);
+	@include box-sizing(border-box);
+	background-color: $blackBg;
+	padding-bottom: 20px;
+
+	.login-notice {
+		@include transition(color 0.2s ease-out);
+		cursor: pointer;
+		color: white;
+		&:hover {
+			color: $redOrange;
+		}
+		
+	}
+	h2 {
+		color: white;
+	}
+}
+.vote-button-container {
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+
+	button {
+		background-color: gray;
+		color: white;
+		cursor: default;
+		max-width: 300px;
+		&.add {
+			background-color: $green;
+			cursor: pointer;
+		}
+		&.remove {
+			background-color: $red;
+			cursor: pointer;
+		}
+	}
+}
+
+
+.my-votes-container {
+	color: white;
+	text-align: center;
+}
+.voted-users-container {
+	@include display-flex;
+	@include justify-content(center);
+	@include align-items(flex-start);
+}
+
+.voted-user {
+	position: relative;
+	margin: 0 10px;
+	text-align: center;
+	.image-container {
+		@extend .center-children;
+	  width: 120px;
+	  height: 120px;
+	  background-size: cover;
+	  position: relative;
+	  background-position: center;
+	  border: 1px solid white;
+	}
+	i {
+		cursor: pointer;
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 5px;
+		background-color: $blackBg;
 	}
 }

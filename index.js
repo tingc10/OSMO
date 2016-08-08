@@ -33,7 +33,7 @@ var transporter = nodemailer.createTransport(smtpTransport({
     port: 25,
     auth: {
       user: 'tingche',
-      pass: 'zW23FXdwr8o2'
+      pass: '4qnVYVMH4qTM'
     }
 }));
 
@@ -224,19 +224,45 @@ var sendHandoffEmail = function(sender, receiver){
 	});
 };
 
+
+/*
+ *	Returns all users and necessary info
+ *	@param {function} callback
+ *	@param {function} error
+ */
+var getAllUsers = function(callback, error) {
+	User.find({},function(err, users){
+		if(err){
+			error(err);
+		} else {
+			callback(users.map(function(user){
+				return user.toJSON()
+			}));
+		}
+
+	});
+};
+
 /*
  *	Returns users who have any media, whether that is a selfie or thumbnails
+ *	@param {function} callback
+ *	@param {function} error
  */
 var getUsersWithMedia = function(callback, error) {
 	User.find({$or:[{videoUri: {$exists:true}}, {selfieLocation:{$exists:true}}, {thumbnailLocations:{$exists:true, $ne: []}}]},function(err, users){
 		if(err){
 			error(err);
 		} else {
-			callback(users.map(function(user){return user.toJSON()}));
+			callback(users.map(function(user){
+				return user.toJSON()}
+				));
 		}
 
 	});
 };
+
+
+
 
 /*
  *	Get the user then run callback on user object. 
@@ -282,9 +308,18 @@ function sortOsmoLocations(users){
 	for(var i = 0, length = users.length; i < length; i++){
 		switch(users[i].location){
 			case "SJ":
+				if(!osmoLocations["SJ"]){
+					osmoLocations["SJ"] = users[i];
+				} else if(!osmoLocations["SJ2"]) {
+					osmoLocations["SJ2"] = users[i];
+				} else {
+					duplicateUsers.push(users[i]);
+				}
+				
+				break;
 			case "SF":
-				if(!osmoLocations["CA"]){
-					osmoLocations["CA"] = users[i];
+				if(!osmoLocations["SF"]){
+					osmoLocations["SF"] = users[i];
 				} else {
 					duplicateUsers.push(users[i]);
 				}
@@ -339,23 +374,25 @@ var usersInSimilarLocation = function(location) {
 	var locationFilter;
 	switch(location){
 		case "SJ":
+			locationFilter = {
+				"location": "SJ"
+			};
+			break;
 		case "SF":
 			locationFilter = {
-				$or: [
-					{"location": "SF"},
-					{"location": "SJ"},
-					{"location": "SD"}
-				]
+				"location": "SF"
 			};
 			break;
 		case "TX":
 		case "SEATTLE":
 		case "OREGON":
+		case "SD":
 			locationFilter = {
 				$or: [
 					{"location": "TX"},
 					{"location": "SEATTLE"},
-					{"location": "OREGON"}
+					{"location": "OREGON"},
+					{"location": "SD"}
 				]
 			};
 			break;
@@ -473,7 +510,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(session({
   cookieName: 'session',
   secret: crypto.randomBytes(64).toString('hex'),
-  duration: 30 * 60 * 1000,
+  duration: 2 * 60 * 60 * 1000, // keep session live for 2 hours
   activeDuration: 5 * 60 * 1000,
 }));
 /*
@@ -722,8 +759,8 @@ app.post('/osmo/db/refer', requireLogin, function(req, res){
 			recipientUser.referer = currentUser.userId;
 			recipientUser.save(function(err){
 				if(err){
-					console.log({msg:"error: saved handoff but not referrer", error: err});
-					res.status(400).send({msg:"error: saved handoff but not referrer", error: err});
+					console.log({msg:"error: saved handoff but not referer", error: err});
+					res.status(400).send({msg:"error: saved handoff but not referer", error: err});
 
 				}
 				sendHandoffEmail(currentUser, recipientUser);
@@ -739,13 +776,39 @@ app.post('/osmo/db/refer', requireLogin, function(req, res){
  *	Get all users with OSMO
  */
 app.get('/osmo/db/users/hasOSMO', function(req, res){
-	User.find({hasOSMO: true}, 'userId location', function(err, users){
+	User.find({hasOSMO: true}, 'userId location timeStart handoffTo', function(err, users){
 		if(err){
 			res.status(400).send({msg:"error", error: err});
 
 		}
 		var osmoLocations = sortOsmoLocations(users);
-		res.status(200).send({msg:"success", users: osmoLocations});
+		// get all users to get the name
+		User.find({}, function(err, users){
+			if(err) {
+				console.log('Error occured getting all users');
+				res.status(400).send({msg:"error", error: err});
+			}
+			var getNameFromId = function(userId){
+				if(!users) {
+					console.log('no info about all users');
+					return;
+				}
+				for(var i = 0, length = users.length; i < length; i ++){
+					if(users[i].userId == userId) {
+						return (users[i].name ? users[i].name : userId);
+					}
+				}
+				console.log("could not find user with ID: " + userId);
+			};
+			for(var location in osmoLocations){
+				osmoLocations[location].userId = getNameFromId(osmoLocations[location].userId);
+				if(osmoLocations[location].handoffTo) {
+					osmoLocations[location].handoffTo = getNameFromId(osmoLocations[location].handoffTo);
+				}
+			}
+			res.status(200).send({msg:"success", users: osmoLocations});
+		});
+		
 	});
 });
 
@@ -761,10 +824,12 @@ app.get('/osmo/db/users/:filter', function(req, res){
 		}
 		var locationFilter = usersInSimilarLocation(req.user.location);
 		var hasNotUpload = {uploadComplete: {$exists:false}};
-		User.find({$and:[locationFilter, hasNotUpload]}, 'userId location').sort({location:-1}).exec(function(err, users){
+		var noOSMO = {$or: [{hasOSMO: false}, {hasOSMO: {$exists: false}}]};
+		User.find({$and:[locationFilter, hasNotUpload, noOSMO]}, 'userId location').sort({location:-1}).exec(function(err, users){
 			if(err){
 				res.status(400).send({msg:"Error", error: err});
 			}
+
 			res.status(200).send({msg:"success", users: users})
 
 		});
@@ -773,16 +838,14 @@ app.get('/osmo/db/users/:filter', function(req, res){
 		getUsersWithMedia(function(usersJSON){
 			res.status(200).send(usersJSON);
 		}, function(err){
-			res.status(400).send('could not retrieve users');
+			res.status(400).send('could not retrieve users with media');
 		});
 	} else {
 		// get all users by default
-		User.find({}, function(err, users){
-			if(err){
-				res.status(400).send({msg: "error", error: err});
-
-			}
-			res.status(200).send({msg: "success, no filters specified", error: users});
+		getAllUsers(function(usersJSON){
+			res.status(200).send(usersJSON);
+		}, function(err){
+			res.status(400).send('could not retrieve all users');
 
 		});
 	}
@@ -868,6 +931,43 @@ app.put('/osmo/db/users', function(req, res) {
 		console.log(userId+' has successfully updated their password.');
 		// save user session when account is created
 		setSession(req, user);
+		res.status(200).send("success");
+	});
+	
+});
+
+/*
+ *	Update password/ reset pasword link
+ *	Cache Session after completion
+ */
+app.put('/osmo/db/users/name', requireLogin, function(req, res) {
+	var data = req.body,
+			name = data.name;
+	User.findOneAndUpdate({userId: req.user.userId}, {name: name}, {new: true}, function(err, user){
+		if(err) {
+			console.log("Error updating name:" + err);
+			res.status(400).send({msg: "Could not update name...", error: err});
+		}
+		console.log(user.userId+' has successfully updated their name.');
+		res.status(200).send("success");
+	});
+	
+});
+
+/*
+ *	Update votes
+ *	Cache Session after completion
+ */
+app.put('/osmo/db/users/votes', requireLogin, function(req, res) {
+	var data = req.body,
+			newVotes = data.votes;
+
+	User.findOneAndUpdate({userId: req.user.userId}, {votes: newVotes}, {new: true}, function(err, user){
+		if(err) {
+			console.log("Error updating votes:" + err);
+			res.status(400).send({msg: "Could not update votes...", error: err});
+		}
+		console.log(user.userId+' has successfully updated their votes.');
 		res.status(200).send("success");
 	});
 	

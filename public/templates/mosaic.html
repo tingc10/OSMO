@@ -1,3 +1,5 @@
+
+
 <!-- <img class="ccds-logo stamp" src="./img/ccds-logo.png"></img> -->
 <img id="osmo-image" src="./img/dji-osmo.png"></img>
 
@@ -6,11 +8,23 @@
 <div class="stamp video" stamp>
 	<div class="focus-item" ng-click="fullScreen()">
 		<img src="//i.giphy.com/SqP6xkizrTNO8.gif" ng-hide="currentVideo"></img>
-		<i class="icon-fullscreen"></i>
+		<i class="icon-fullscreen" ng-show="currentVideo"></i>
 		<video controls ng-if="currentVideo" autoplay>
 			<source ng-src="{{currentVideo | trustUrl}}" type="video/mp4">
 		</video>
 	</div>
 </div>
+
+
+
 <div class="video-wrappers {{::randomSize}}" ng-class="{focus: $index == focusIndex}" ng-repeat="image in images track by $index" packery-item></div>
 <div class="unit-reference"></div>
+
+
+
+<div class="osmo-locations">
+	<div class="location-container" ng-repeat="location in osmoLocations">
+		<h3 class="location-name">{{::location.name}}</h3>
+		<h4 class="user-status">{{::legibleStatus(location)}}</h4>
+	</div>
+</div>

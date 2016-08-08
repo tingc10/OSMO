@@ -1,0 +1,12 @@
+
+<!-- <div class="image-container" ng-style="{'background-image': 'url('+(userInfo ? userInfo.selfieLocation : '')+')'}">
+	<i class="icon-exit" ng-click="removeVote()"></i>
+</div>
+
+<h3>{{userInfo ? userInfo.name : userId}}</h3> -->
+<div class="image-container" ng-style="{'background-image': 'url('+(userInfo ? userInfo.selfieLocation : '')+')'}">
+	<i class="icon-exit" ng-if="userInfo" ng-click="removeVote()"></i>
+	<h1 ng-if="!userInfo">?</h1>
+</div>
+<h3>{{userInfo ? userInfo.name : "No Selection"}}</h3>
+<h4>{{award}}</h4>

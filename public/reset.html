@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<title>CCDS | Life of Design</title>
+<link href="./stylesheets/main.css" rel="stylesheet">
+<link href="./icomoon/style.css" rel="stylesheet">
+<script src="./node_modules/angular/angular.min.js"></script>
+<script src="./node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+<script src="./node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
+<script src="./node_modules/gsap/src/minified/TweenMax.min.js"></script>
+<script src="./js/throttleResize.js"></script>
+
+<!-- PERSONAL JS -->
+<script type="text/javascript" src="./js/directives.js"></script>
+<script type="text/javascript" src="./js/controllers.js"></script>
+<script type="text/javascript" src="./js/app.js"></script>
+</head>
+<body class="center-children" ng-app="OsmoApp">
+	<div class="panel-container register" reset>
+		<div class="form-wrapper" ng-show="showRegistration">
+			<h4>Cisco ID:</h4>
+			<h3>{{userId}}</h3>
+			
+			
+			<label for="password">
+				<h2>Password</h2>
+			</label>
+			<input name="password" type="{{showPassword? 'text':'password'}}" placeholder="5UP3R 53CR3T" ng-model="password" submit-with-enter="resetAccount"/>
+			<div class="show-password-container">
+				<input type="checkbox" ng-model="showPassword" value="false" name="reveal" />
+				<label for="reveal">
+					Show Password
+				</label>
+			</div>
+			<button ng-click="resetAccount()">Submit</button>
+		</div>
+		<h2 ng-hide="showRegistration">{{registrationMessage}}</h2>
+	</div>
+
+</body>
+</html>

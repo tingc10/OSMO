@@ -1,0 +1,56 @@
+<div class="voting-container center-children">
+	<h1 class="login-notice" ng-if="!loggedIn" ng-click="toggleLogin(true)">
+		Login to Vote
+	</h1>
+
+	<div class="my-votes-container" ng-if="loggedIn">
+		<h2>My Votes</h2>
+		<div class="voted-users-container">
+			<div class="voted-user" voted-user ng-repeat="award in awards track by $index"></div>
+		</div>
+		
+	</div>
+
+</div>
+
+
+
+
+
+
+
+<div class="users-list-container">
+	<div class="users-container">
+		<div class="user-container" ng-click="focusUser(user)" ng-repeat="user in $root.allUsers track by $index" user-list-item></div>
+	</div>
+
+
+
+
+
+	<div class="video-container">
+		<h1 ng-hide="selectedUser">
+			Select a name to see their video!
+		</h1>
+		<div class="current-user-info" ng-if="selectedUser">
+			<div class="image-container" ng-style="{'background-image': 'url('+selectedUser.selfieLocation+')'}"></div>
+			<div class="meta center-children">
+				<h2 class="name">{{selectedUser.name}}</h3>
+				<h3 class="location">{{fullLocationName(selectedUser.location)}}</h4>
+			</div>
+			<div class="vote-button-container center-children" ng-if="loggedIn" >
+				<select ng-model="currentAward.index">
+					<option value="{{$index}}" ng-repeat="award in awards track by $index">{{award}}</option>
+				</select>
+				<button ng-click="voteAction()" ng-class="{add:voteMessage == 'Cast Vote' && currentAward.index}">{{voteMessage}}</button>
+			</div>
+		</div>
+
+		<div>
+			<video controls autoplay ng-if="currentVideo">
+				<source ng-src="{{currentVideo | trustUrl}}" type="video/mp4">
+			</video>
+		</div>
+	</div>
+
+</div>
